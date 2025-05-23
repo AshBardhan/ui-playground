@@ -43,6 +43,18 @@ export default function DynamicFilterPage() {
 		setConditions((prev) => prev.map((condition, i) => (i === index ? { ...condition, value: newValue } : condition)));
 	};
 
+	const handleLeftBracketToggle = (index: number) => {
+		setConditions((prev) =>
+			prev.map((condition, i) => (i === index ? { ...condition, leftBracket: !condition.leftBracket } : condition))
+		);
+	};
+
+	const handleRightBracketToggle = (index: number) => {
+		setConditions((prev) =>
+			prev.map((condition, i) => (i === index ? { ...condition, rightBracket: !condition.rightBracket } : condition))
+		);
+	};
+
 	const removeCondition = (index: number) => {
 		setConditions((prev) => prev.filter((_, i) => i !== index));
 	};
@@ -72,6 +84,8 @@ export default function DynamicFilterPage() {
 						onLogicalOperatorChange={handleLogicalOperatorChange}
 						onOperatorChange={handleOperatorChange}
 						onValueChange={handleValueChange}
+						onLeftBracketToggle={handleLeftBracketToggle}
+						onRightBracketToggle={handleRightBracketToggle}
 						onAddCondition={addCondition}
 						onRemoveCondition={removeCondition}
 					/>

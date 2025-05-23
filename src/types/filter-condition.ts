@@ -5,4 +5,6 @@ export type FilterCondition = {
 	operator: string;
 	value: string | number;
 	logicalOperator?: LogicalOperator;
+	leftBracket?: boolean;
+	rightBracket?: boolean;
 };

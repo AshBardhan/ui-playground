@@ -11,6 +11,8 @@ interface DynamicFilterBoxProps {
 	onLogicalOperatorChange?: (index: number, operator: LogicalOperator) => void;
 	onOperatorChange?: (index: number, operator: string) => void;
 	onValueChange?: (index: number, value: string | number) => void;
+	onLeftBracketToggle?: (index: number) => void;
+	onRightBracketToggle?: (index: number) => void;
 	onAddCondition?: () => void;
 	onRemoveCondition?: (index: number) => void;
 }
@@ -23,24 +25,47 @@ const DynamicFilterBox = ({
 	onLogicalOperatorChange,
 	onOperatorChange,
 	onValueChange,
+	onLeftBracketToggle,
+	onRightBracketToggle,
 	onAddCondition,
 	onRemoveCondition,
 }: DynamicFilterBoxProps) => {
+	const getBracketLevel = (index: number) => {
+		let level = 0;
+		for (let i = 0; i < index; i++) {
+			if (conditions[i].leftBracket) {
+				level++;
+			}
+			if (conditions[i].rightBracket) {
+				level--;
+			}
+		}
+		return level;
+	};
+
 	return (
 		<div className={isReadOnly ? 'space-y-2' : 'space-y-4'}>
 			{conditions.map((cond, index) => {
 				const fieldSchema = schema.find((f) => f.name === cond.field);
+				let startLevel = getBracketLevel(index);
+				let nestedLevel = (startLevel > 0 ? startLevel : 0) + (cond.leftBracket ? 1 : 0);
+				let endLevel = getBracketLevel(index + 1);
+				endLevel = endLevel > 0 ? endLevel : 0;
 
 				return (
 					<div key={index}>
 						{isReadOnly ? (
-							<div>
-								{index > 0 && <span className="mr-2">{cond.logicalOperator}</span>}
-								<span className="mr-2">where</span>
-								<span className="mr-2">{cond.field}</span>
-								<span className="mr-2">{cond.operator}</span>
-								<span>{cond.value || '--Empty--'}</span>
-							</div>
+							<>
+								{cond.leftBracket && <div style={{ marginLeft: `${startLevel * 10}px` }}>[</div>}
+								{index > 0 && <div style={{ marginLeft: `${nestedLevel * 10}px` }}>{cond.logicalOperator}</div>}
+								<div style={{ marginLeft: `${nestedLevel * 10}px` }}>where</div>
+								<div style={{ marginLeft: `${nestedLevel * 10}px` }}>
+									<span className="mr-2">{cond.field}</span>
+									<span className="mr-2">{cond.operator}</span>
+									<span>{cond.value || '--Empty--'}</span>
+								</div>
+								{cond.rightBracket && <div style={{ marginLeft: `${endLevel * 10}px` }}>]</div>}
+							</>
 						) : (
 							<>
 								{index > 0 && (
@@ -57,7 +82,14 @@ const DynamicFilterBox = ({
 										</div>
 									</>
 								)}
+
 								<div className="flex gap-3 items-center">
+									{/* Left Bracket */}
+									<div
+										className={`border-4 h-10 w-2 border-r-0 ${cond.leftBracket ? 'border-black' : 'border-gray-300'} hover:border-gray-600`}
+										onClick={() => onLeftBracketToggle && onLeftBracketToggle(index)}
+									></div>
+
 									{/* Field dropdown */}
 									<DropdownList
 										options={schema.map((field) => field.name)}
@@ -89,6 +121,12 @@ const DynamicFilterBox = ({
 											className="border px-2 py-1 rounded w-32"
 										/>
 									)}
+
+									{/* Right Bracket */}
+									<div
+										className={`border-4 h-10 w-2 border-l-0 ${cond.rightBracket ? 'border-black' : 'border-gray-300'} hover:border-gray-600`}
+										onClick={() => onRightBracketToggle && onRightBracketToggle(index)}
+									></div>
 
 									{/* Remove Condition */}
 									{conditions.length > 1 && (
