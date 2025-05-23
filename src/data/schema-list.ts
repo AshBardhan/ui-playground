@@ -10,7 +10,7 @@ export const schemaList: FilterFieldSchema[] = [
 	{
 		name: 'status',
 		label: 'Account Status',
-		type: 'enum',
+		type: 'select',
 		operators: ['is', 'is not'],
 		values: ['Active', 'Inactive', 'Pending'],
 	},
@@ -18,6 +18,6 @@ export const schemaList: FilterFieldSchema[] = [
 		name: 'name',
 		label: 'User Name',
 		type: 'string',
-		operators: ['is', 'is not', 'contains', 'starts with'],
+		operators: ['is', 'is not', 'contains', 'starts with', 'ends with'],
 	},
 ];
