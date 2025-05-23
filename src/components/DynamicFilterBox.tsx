@@ -75,7 +75,7 @@ const DynamicFilterBox = ({
 									)}
 
 									{/* Value input */}
-									{fieldSchema?.type === 'enum' && fieldSchema.values ? (
+									{fieldSchema?.type === 'select' && fieldSchema.values ? (
 										<DropdownList
 											options={fieldSchema.values}
 											selectedOption={cond.value as string}

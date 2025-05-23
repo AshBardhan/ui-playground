@@ -18,7 +18,7 @@ export default function DynamicFilterPage() {
 							field: newField,
 							operator: fieldSchema.operators[0],
 							value:
-								fieldSchema.type === 'enum' && fieldSchema.values && fieldSchema.values.length > 0
+								fieldSchema.type === 'select' && fieldSchema.values && fieldSchema.values.length > 0
 									? fieldSchema.values[0]
 									: '',
 						}
