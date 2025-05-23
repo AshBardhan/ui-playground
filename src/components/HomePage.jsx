@@ -1,6 +1,8 @@
 // HomePage.js
 import React, { useState } from 'react';
 import Header from './Header';
+import { Button } from '@headlessui/react'
+
 
 const HomePage = () => {
   const names = ["Ada Lovelace", "Grace Hopper", "Margaret Hamilton"];
@@ -18,9 +20,9 @@ const HomePage = () => {
           <li key={name}>{name}</li>
         ))}
       </ul>
-      <button className="bg-violet-500 hover:bg-violet-600 focus:outline-2 focus:outline-offset-2 focus:outline-violet-500 active:bg-violet-700 p-4 rounded-lg font-bold text-white cursor-pointer" onClick={handleClick}>
+      <Button className="bg-violet-500 hover:bg-violet-600 focus:outline-2 focus:outline-offset-2 focus:outline-violet-500 active:bg-violet-700 p-4 rounded-lg font-bold text-white cursor-pointer" onClick={handleClick}>
         Like ({likes})
-      </button>
+      </Button>
     </div>
   );
 };
