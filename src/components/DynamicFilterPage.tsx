@@ -35,7 +35,7 @@ export default function DynamicFilterPage() {
     });
   };
 
-  const handleValueChange = (index: number, newValue: string) => {
+  const handleValueChange = (index: number, newValue: string | number) => {
     setConditions((prev) => {
       const updated = [...prev];
       updated[index].value = newValue;

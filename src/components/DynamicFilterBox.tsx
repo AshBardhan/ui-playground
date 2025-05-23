@@ -1,58 +1,19 @@
-import { useState } from "react";
 import { FilterFieldSchema } from "../types/filter-schema";
 import { FilterCondition } from "../types/filter-condition";
-import { Button } from "@headlessui/react";
+import {
+  Button,
+} from "@headlessui/react";
+import DropdownList from "./DropdownList";
 
 interface DynamicFilterBoxProps {
   schema: FilterFieldSchema[];
   conditions: FilterCondition[];
   onFieldChange: (index: number, field: string) => void;
   onOperatorChange: (index: number, operator: string) => void;
-  onValueChange: (index: number, value: string) => void;
+  onValueChange: (index: number, value: string | number) => void;
   onAddCondition: () => void;
   onRemoveCondition: (index: number) => void;
 }
-
-type Primitive = string | number | Date;
-
-const Dropdown = ({
-  value,
-  options,
-  onChange,
-}: {
-  value: Primitive;
-  options: Primitive[];
-  onChange: (val: string) => void;
-}) => {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div className="relative">
-      <Button
-        onClick={() => setOpen(!open)}
-        className="border px-2 py-1 rounded w-32 text-left bg-white"
-      >
-        {value?.toString() || "Select"}
-      </Button>
-      {open && (
-        <div className="absolute mt-1 bg-white border rounded shadow w-32 z-10">
-          {options.map((option) => (
-            <div
-              key={option.toString()}
-              onClick={() => {
-                onChange(option.toString());
-                setOpen(false);
-              }}
-              className="cursor-pointer px-2 py-1 hover:bg-gray-100"
-            >
-              {option.toString()}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
 
 const DynamicFilterBox = ({
   schema,
@@ -71,27 +32,27 @@ const DynamicFilterBox = ({
         return (
           <div key={index} className="flex gap-3 items-center">
             {/* Field dropdown */}
-            <Dropdown
-              value={cond.field}
-              options={schema.map((f) => f.name)}
-              onChange={(val) => onFieldChange(index, val)}
+            <DropdownList
+              options={schema.map((field) => field.name)}
+              selectedOption={cond.field}
+              onSelect={(val) => onFieldChange(index, val)}
             />
 
             {/* Operator dropdown */}
             {fieldSchema && (
-              <Dropdown
-                value={cond.operator}
+              <DropdownList
                 options={fieldSchema.operators}
-                onChange={(val) => onOperatorChange(index, val)}
+                selectedOption={cond.operator}
+                onSelect={(val) => onOperatorChange(index, val)}
               />
             )}
 
             {/* Value input */}
-            {fieldSchema?.type === "enum" ? (
-              <Dropdown
-                value={cond.value}
-                options={fieldSchema.values ?? []}
-                onChange={(val) => onValueChange(index, val)}
+            {fieldSchema?.type === "enum" && fieldSchema.values ? (
+               <DropdownList
+                options={fieldSchema.values}
+                selectedOption={cond.value as string}
+                onSelect={(val) => onValueChange(index, val)}
               />
             ) : (
               <input
