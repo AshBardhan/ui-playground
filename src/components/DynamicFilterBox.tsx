@@ -1,14 +1,13 @@
 import { FilterFieldSchema } from "../types/filter-schema";
-import { FilterCondition } from "../types/filter-condition";
-import {
-  Button,
-} from "@headlessui/react";
+import { FilterCondition, LogicalOperator } from "../types/filter-condition";
+import { Button, Input } from "@headlessui/react";
 import DropdownList from "./DropdownList";
 
 interface DynamicFilterBoxProps {
   schema: FilterFieldSchema[];
   conditions: FilterCondition[];
   onFieldChange: (index: number, field: string) => void;
+  onLogicalOperatorChange: (index: number, operator: LogicalOperator) => void;
   onOperatorChange: (index: number, operator: string) => void;
   onValueChange: (index: number, value: string | number) => void;
   onAddCondition: () => void;
@@ -19,6 +18,7 @@ const DynamicFilterBox = ({
   schema,
   conditions,
   onFieldChange,
+  onLogicalOperatorChange,
   onOperatorChange,
   onValueChange,
   onAddCondition,
@@ -30,48 +30,64 @@ const DynamicFilterBox = ({
         const fieldSchema = schema.find((f) => f.name === cond.field);
 
         return (
-          <div key={index} className="flex gap-3 items-center">
-            {/* Field dropdown */}
-            <DropdownList
-              options={schema.map((field) => field.name)}
-              selectedOption={cond.field}
-              onSelect={(val) => onFieldChange(index, val)}
-            />
-
-            {/* Operator dropdown */}
-            {fieldSchema && (
+          <div key={index}>
+            {index > 0 && (
+              <>
+                {/* Logical Operator dropdown */}
+                <div className="flex my-4">
+                  <DropdownList
+                    options={["AND", "OR"]}
+                    selectedOption={cond.logicalOperator || "AND"}
+                    onSelect={(val) =>
+                      onLogicalOperatorChange(index, val as LogicalOperator)
+                    }
+                  />
+                </div>
+              </>
+            )}
+            <div className="flex gap-3 items-center">
+              {/* Field dropdown */}
               <DropdownList
-                options={fieldSchema.operators}
-                selectedOption={cond.operator}
-                onSelect={(val) => onOperatorChange(index, val)}
+                options={schema.map((field) => field.name)}
+                selectedOption={cond.field}
+                onSelect={(val) => onFieldChange(index, val)}
               />
-            )}
 
-            {/* Value input */}
-            {fieldSchema?.type === "enum" && fieldSchema.values ? (
-               <DropdownList
-                options={fieldSchema.values}
-                selectedOption={cond.value as string}
-                onSelect={(val) => onValueChange(index, val)}
-              />
-            ) : (
-              <input
-                type={fieldSchema?.type === "number" ? "number" : "text"}
-                value={cond.value}
-                onChange={(e) => onValueChange(index, e.target.value)}
-                className="border px-2 py-1 rounded w-32"
-              />
-            )}
+              {/* Operator dropdown */}
+              {fieldSchema && (
+                <DropdownList
+                  options={fieldSchema.operators}
+                  selectedOption={cond.operator}
+                  onSelect={(val) => onOperatorChange(index, val)}
+                />
+              )}
 
-            {/* Remove Condition */}
-            {conditions.length > 1 && (
-              <Button
-                onClick={() => onRemoveCondition(index)}
-                className="text-red-500 hover:text-red-700"
-              >
-                ✕
-              </Button>
-            )}
+              {/* Value input */}
+              {fieldSchema?.type === "enum" && fieldSchema.values ? (
+                <DropdownList
+                  options={fieldSchema.values}
+                  selectedOption={cond.value as string}
+                  onSelect={(val) => onValueChange(index, val)}
+                />
+              ) : (
+                <Input
+                  type={fieldSchema?.type === "number" ? "number" : "text"}
+                  value={cond.value}
+                  onChange={(e) => onValueChange(index, e.target.value)}
+                  className="border px-2 py-1 rounded w-32"
+                />
+              )}
+
+              {/* Remove Condition */}
+              {conditions.length > 1 && (
+                <Button
+                  onClick={() => onRemoveCondition(index)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  ✕
+                </Button>
+              )}
+            </div>
           </div>
         );
       })}
