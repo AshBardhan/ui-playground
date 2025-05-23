@@ -5,6 +5,7 @@ export const conditionList: FilterCondition[] = [
 		field: 'age',
 		operator: '>',
 		value: 30,
+		logicalOperator: 'AND',
 	},
 	{
 		field: 'status',

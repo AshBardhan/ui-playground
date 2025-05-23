@@ -1,4 +1,4 @@
-export type LogicalOperator = 'AND' | 'OR' | undefined;
+export type LogicalOperator = 'AND' | 'OR';
 
 export type FilterCondition = {
 	field: string;

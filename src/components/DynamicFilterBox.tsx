@@ -57,32 +57,21 @@ const DynamicFilterBox = ({
 						{isReadOnly ? (
 							<>
 								{cond.leftBracket && <div style={{ marginLeft: `${startLevel * 10}px` }}>[</div>}
-								{index > 0 && <div style={{ marginLeft: `${nestedLevel * 10}px` }}>{cond.logicalOperator}</div>}
 								<div style={{ marginLeft: `${nestedLevel * 10}px` }}>where</div>
 								<div style={{ marginLeft: `${nestedLevel * 10}px` }}>
-									<span className="mr-2">{cond.field}</span>
+									<span className="mr-2 font-medium">{cond.field}</span>
 									<span className="mr-2">{cond.operator}</span>
-									<span>{cond.value || '--Empty--'}</span>
+									<span className="font-medium">{cond.value || '--Empty--'}</span>
 								</div>
 								{cond.rightBracket && <div style={{ marginLeft: `${endLevel * 10}px` }}>]</div>}
+								{index < conditions.length - 1 && (
+									<div className="my-2 text-pink-600" style={{ marginLeft: `${endLevel * 10}px` }}>
+										{cond.logicalOperator}
+									</div>
+								)}
 							</>
 						) : (
 							<>
-								{index > 0 && (
-									<>
-										{/* Logical Operator dropdown */}
-										<div className="flex my-4">
-											<DropdownList
-												options={['AND', 'OR']}
-												selectedOption={cond.logicalOperator || 'AND'}
-												onSelect={(val) =>
-													onLogicalOperatorChange && onLogicalOperatorChange(index, val as LogicalOperator)
-												}
-											/>
-										</div>
-									</>
-								)}
-
 								<div className="flex gap-3 items-center">
 									{/* Left Bracket */}
 									<div
@@ -138,6 +127,20 @@ const DynamicFilterBox = ({
 										</Button>
 									)}
 								</div>
+								{index < conditions.length - 1 && (
+									<>
+										{/* Logical Operator dropdown */}
+										<div className="my-4">
+											<DropdownList
+												options={['AND', 'OR']}
+												selectedOption={cond.logicalOperator || 'AND'}
+												onSelect={(val) =>
+													onLogicalOperatorChange && onLogicalOperatorChange(index, val as LogicalOperator)
+												}
+											/>
+										</div>
+									</>
+								)}
 							</>
 						)}
 					</div>
