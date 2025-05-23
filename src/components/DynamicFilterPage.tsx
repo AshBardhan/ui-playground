@@ -11,47 +11,52 @@ export default function DynamicFilterPage() {
   const handleFieldChange = (index: number, newField: string) => {
     const fieldSchema = schemaList.find((f) => f.name === newField);
     if (!fieldSchema) return;
-    setConditions((prev) => {
-      const updated = [...prev];
-      updated[index] = {
-        field: newField,
-        operator: fieldSchema.operators[0],
-        value:
-          fieldSchema.type === "enum" &&
-          fieldSchema.values &&
-          fieldSchema.values.length > 0
-            ? fieldSchema.values[0]
-            : "",
-      };
-      return updated;
-    });
+    setConditions((prev) =>
+      prev.map((condition, i) =>
+        i === index
+          ? {
+              ...condition,
+              field: newField,
+              operator: fieldSchema.operators[0],
+              value:
+                fieldSchema.type === "enum" &&
+                fieldSchema.values &&
+                fieldSchema.values.length > 0
+                  ? fieldSchema.values[0]
+                  : "",
+            }
+          : condition,
+      ),
+    );
   };
 
   const handleLogicalOperatorChange = (
     index: number,
     newOperator: LogicalOperator,
   ) => {
-    setConditions((prev) => {
-      const updated = [...prev];
-      updated[index].logicalOperator = newOperator;
-      return updated;
-    });
+    setConditions((prev) =>
+      prev.map((condition, i) =>
+        i === index
+          ? { ...condition, logicalOperator: newOperator }
+          : condition,
+      ),
+    );
   };
 
   const handleOperatorChange = (index: number, newOperator: string) => {
-    setConditions((prev) => {
-      const updated = [...prev];
-      updated[index].operator = newOperator;
-      return updated;
-    });
+    setConditions((prev) =>
+      prev.map((condition, i) =>
+        i === index ? { ...condition, operator: newOperator } : condition,
+      ),
+    );
   };
 
   const handleValueChange = (index: number, newValue: string | number) => {
-    setConditions((prev) => {
-      const updated = [...prev];
-      updated[index].value = newValue;
-      return updated;
-    });
+    setConditions((prev) =>
+      prev.map((condition, i) =>
+        i === index ? { ...condition, value: newValue } : condition,
+      ),
+    );
   };
 
   const removeCondition = (index: number) => {
@@ -73,16 +78,29 @@ export default function DynamicFilterPage() {
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Dynamic Filter</h1>
-      <DynamicFilterBox
-        schema={schemaList}
-        conditions={conditions}
-        onFieldChange={handleFieldChange}
-        onLogicalOperatorChange={handleLogicalOperatorChange}
-        onOperatorChange={handleOperatorChange}
-        onValueChange={handleValueChange}
-        onAddCondition={addCondition}
-        onRemoveCondition={removeCondition}
-      />
+      <div className="flex gap-5">
+        <div className="border p-4 rounded-lg shadow-md w-1/2">
+          <h2 className="text-lg font-semibold mb-4">Config Mode</h2>
+          <DynamicFilterBox
+            schema={schemaList}
+            conditions={conditions}
+            onFieldChange={handleFieldChange}
+            onLogicalOperatorChange={handleLogicalOperatorChange}
+            onOperatorChange={handleOperatorChange}
+            onValueChange={handleValueChange}
+            onAddCondition={addCondition}
+            onRemoveCondition={removeCondition}
+          />
+        </div>
+        <div className="border p-4 rounded-lg shadow-md w-1/2">
+          <h2 className="text-lg font-semibold mb-4">Read-Only Mode</h2>
+          <DynamicFilterBox
+            schema={schemaList}
+            conditions={conditions}
+            isReadOnly={true}
+          />
+        </div>
+      </div>
     </div>
   );
 }

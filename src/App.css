@@ -3,7 +3,3 @@
 *, *::before, *::after {
     box-sizing: border-box;
 }
-
-h1 {
-    color: red;
-}
