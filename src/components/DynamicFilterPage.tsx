@@ -1,11 +1,12 @@
-import { useState } from 'react';
-import {schemaList} from '../data/schema-list';
-import {conditionList} from '../data/condition-list';
-import { FilterCondition } from '../types/filter-condition';
-import DynamicFilterBox from './DynamicFilterBox';
+import { useState } from "react";
+import { schemaList } from "../data/schema-list";
+import { conditionList } from "../data/condition-list";
+import { FilterCondition } from "../types/filter-condition";
+import DynamicFilterBox from "./DynamicFilterBox";
 
 export default function DynamicFilterPage() {
-  const [conditions, setConditions] = useState<FilterCondition[]>(conditionList);
+  const [conditions, setConditions] =
+    useState<FilterCondition[]>(conditionList);
 
   const handleFieldChange = (index: number, newField: string) => {
     const fieldSchema = schemaList.find((f) => f.name === newField);
@@ -15,7 +16,12 @@ export default function DynamicFilterPage() {
       updated[index] = {
         field: newField,
         operator: fieldSchema.operators[0],
-        value: ''
+        value:
+          fieldSchema.type === "enum" &&
+          fieldSchema.values &&
+          fieldSchema.values.length > 0
+            ? fieldSchema.values[0]
+            : "",
       };
       return updated;
     });
@@ -39,13 +45,16 @@ export default function DynamicFilterPage() {
 
   const removeCondition = (index: number) => {
     setConditions((prev) => prev.filter((_, i) => i !== index));
-    };
-
+  };
 
   const addCondition = () => {
     setConditions((prev) => [
       ...prev,
-      { field: schemaList[0].name, operator: schemaList[0].operators[0], value: '' }
+      {
+        field: schemaList[0].name,
+        operator: schemaList[0].operators[0],
+        value: "",
+      },
     ]);
   };
 

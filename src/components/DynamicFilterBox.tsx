@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { FilterFieldSchema } from '../types/filter-schema';
-import { FilterCondition } from '../types/filter-condition';
+import { useState } from "react";
+import { FilterFieldSchema } from "../types/filter-schema";
+import { FilterCondition } from "../types/filter-condition";
+import { Button } from "@headlessui/react";
 
 interface DynamicFilterBoxProps {
   schema: FilterFieldSchema[];
@@ -17,7 +18,7 @@ type Primitive = string | number | Date;
 const Dropdown = ({
   value,
   options,
-  onChange
+  onChange,
 }: {
   value: Primitive;
   options: Primitive[];
@@ -27,12 +28,12 @@ const Dropdown = ({
 
   return (
     <div className="relative">
-      <button
+      <Button
         onClick={() => setOpen(!open)}
         className="border px-2 py-1 rounded w-32 text-left bg-white"
       >
-        {value?.toString() || 'Select'}
-      </button>
+        {value?.toString() || "Select"}
+      </Button>
       {open && (
         <div className="absolute mt-1 bg-white border rounded shadow w-32 z-10">
           {options.map((option) => (
@@ -53,7 +54,6 @@ const Dropdown = ({
   );
 };
 
-
 const DynamicFilterBox = ({
   schema,
   conditions,
@@ -61,7 +61,7 @@ const DynamicFilterBox = ({
   onOperatorChange,
   onValueChange,
   onAddCondition,
-  onRemoveCondition
+  onRemoveCondition,
 }: DynamicFilterBoxProps) => {
   return (
     <div className="space-y-4">
@@ -87,7 +87,7 @@ const DynamicFilterBox = ({
             )}
 
             {/* Value input */}
-            {fieldSchema?.type === 'enum' ? (
+            {fieldSchema?.type === "enum" ? (
               <Dropdown
                 value={cond.value}
                 options={fieldSchema.values ?? []}
@@ -95,37 +95,33 @@ const DynamicFilterBox = ({
               />
             ) : (
               <input
-                type={
-                  fieldSchema?.type === 'number'
-                    ? 'number'
-                    : 'text'
-                }
+                type={fieldSchema?.type === "number" ? "number" : "text"}
                 value={cond.value}
                 onChange={(e) => onValueChange(index, e.target.value)}
                 className="border px-2 py-1 rounded w-32"
               />
             )}
 
-            {/* 🗑 Remove Button */}
-            {
-                conditions.length > 1 && (
-                    <button type='button'
-                        onClick={() => onRemoveCondition(index)}
-                        className="text-red-500 hover:text-red-700">
-                        ✕
-                    </button>
-                )
-            }
+            {/* Remove Condition */}
+            {conditions.length > 1 && (
+              <Button
+                onClick={() => onRemoveCondition(index)}
+                className="text-red-500 hover:text-red-700"
+              >
+                ✕
+              </Button>
+            )}
           </div>
         );
       })}
 
-      <button
+      {/* Add Condition */}
+      <Button
         onClick={onAddCondition}
         className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
       >
         + Add Condition
-      </button>
+      </Button>
     </div>
   );
 };
