@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { schemaList } from "../data/schema-list";
 import { conditionList } from "../data/condition-list";
-import { FilterCondition } from "../types/filter-condition";
+import { FilterCondition, LogicalOperator } from "../types/filter-condition";
 import DynamicFilterBox from "./DynamicFilterBox";
 
 export default function DynamicFilterPage() {
@@ -23,6 +23,17 @@ export default function DynamicFilterPage() {
             ? fieldSchema.values[0]
             : "",
       };
+      return updated;
+    });
+  };
+
+  const handleLogicalOperatorChange = (
+    index: number,
+    newOperator: LogicalOperator,
+  ) => {
+    setConditions((prev) => {
+      const updated = [...prev];
+      updated[index].logicalOperator = newOperator;
       return updated;
     });
   };
@@ -54,6 +65,7 @@ export default function DynamicFilterPage() {
         field: schemaList[0].name,
         operator: schemaList[0].operators[0],
         value: "",
+        logicalOperator: "AND",
       },
     ]);
   };
@@ -65,6 +77,7 @@ export default function DynamicFilterPage() {
         schema={schemaList}
         conditions={conditions}
         onFieldChange={handleFieldChange}
+        onLogicalOperatorChange={handleLogicalOperatorChange}
         onOperatorChange={handleOperatorChange}
         onValueChange={handleValueChange}
         onAddCondition={addCondition}
