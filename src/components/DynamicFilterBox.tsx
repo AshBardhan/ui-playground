@@ -2,12 +2,11 @@ import { FilterFieldSchema } from '../types/filter-schema';
 import { FilterCondition, LogicalOperator } from '../types/filter-condition';
 import { Button, Input } from '@headlessui/react';
 import DropdownList from './DropdownList';
-import { fetchMap } from '../utils/api-fetch';
-import { useEffect, useState } from 'react';
 
 interface DynamicFilterBoxProps {
 	schema: FilterFieldSchema[];
 	conditions: FilterCondition[];
+	dynamicValuesMap?: Record<number, string[]>;
 	isReadOnly?: boolean;
 	onFieldChange?: (index: number, field: string) => void;
 	onLogicalOperatorChange?: (index: number, operator: LogicalOperator) => void;
@@ -22,6 +21,7 @@ interface DynamicFilterBoxProps {
 const DynamicFilterBox = ({
 	schema,
 	conditions,
+	dynamicValuesMap,
 	isReadOnly = false,
 	onFieldChange,
 	onLogicalOperatorChange,
@@ -32,8 +32,6 @@ const DynamicFilterBox = ({
 	onAddCondition,
 	onRemoveCondition,
 }: DynamicFilterBoxProps) => {
-	const [dynamicValuesMap, setDynamicValuesMap] = useState<Record<number, string[]>>({});
-
 	const getBracketLevel = (index: number) => {
 		let level = 0;
 		for (let i = 0; i < index; i++) {
@@ -47,33 +45,11 @@ const DynamicFilterBox = ({
 		return level;
 	};
 
-	useEffect(() => {
-		const fetchAllValues = async () => {
-			const map: Record<number, string[]> = {};
-
-			await Promise.all(
-				conditions.map(async (cond, index) => {
-					const fieldSchema = schema.find((f) => f.name === cond.field);
-					if (fieldSchema?.type === 'select' && fieldSchema.fetchURL) {
-						const response = await fetchMap[fieldSchema.fetchURL]();
-						map[index] = response;
-					} else {
-						map[index] = fieldSchema?.values ?? [];
-					}
-				})
-			);
-
-			setDynamicValuesMap(map);
-		};
-
-		fetchAllValues();
-	}, [conditions]);
-
 	return (
 		<div className={isReadOnly ? 'space-y-2' : 'space-y-4'}>
 			{conditions.map((cond, index) => {
 				const fieldSchema = schema.find((f) => f.name === cond.field);
-				const dynamicValues = dynamicValuesMap[index] || [];
+				const dynamicValues = dynamicValuesMap?.[index] || [];
 				let startLevel = getBracketLevel(index);
 				let nestedLevel = (startLevel > 0 ? startLevel : 0) + (cond.leftBracket ? 1 : 0);
 				let endLevel = getBracketLevel(index + 1);

@@ -7,20 +7,26 @@ import { fetchMap } from '../utils/api-fetch';
 
 export default function DynamicFilterPage() {
 	const [conditions, setConditions] = useState<FilterCondition[]>(conditionList);
+	const [dynamicValuesMap, setDynamicValuesMap] = useState<Record<number, string[]>>({});
 
 	const handleFieldChange = async (index: number, newField: string) => {
 		const fieldSchema = schemaList.find((f) => f.name === newField);
 		if (!fieldSchema) return;
 		let defaultValue = '';
 
+		// Fetch dynamic values (if applicable)
 		if (fieldSchema.type === 'select') {
 			if (fieldSchema.fetchURL) {
 				const fetched = await fetchMap[fieldSchema.fetchURL]();
 				defaultValue = fetched?.[0] ?? '';
+				setDynamicValuesMap((prev) => ({ ...prev, [index]: fetched }));
 			} else if (fieldSchema.values?.length) {
 				defaultValue = fieldSchema.values[0];
+				setDynamicValuesMap((prev) => ({ ...prev, [index]: fieldSchema.values! }));
 			}
 		}
+
+		// Update the condition
 		setConditions((prev) =>
 			prev.map((condition, i) =>
 				i === index
@@ -88,6 +94,7 @@ export default function DynamicFilterPage() {
 					<DynamicFilterBox
 						schema={schemaList}
 						conditions={conditions}
+						dynamicValuesMap={dynamicValuesMap}
 						onFieldChange={handleFieldChange}
 						onLogicalOperatorChange={handleLogicalOperatorChange}
 						onOperatorChange={handleOperatorChange}
