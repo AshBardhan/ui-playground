@@ -3,13 +3,24 @@ import { schemaList } from '../data/schema-list';
 import { conditionList } from '../data/condition-list';
 import { FilterCondition, LogicalOperator } from '../types/filter-condition';
 import DynamicFilterBox from './DynamicFilterBox';
+import { fetchMap } from '../utils/api-fetch';
 
 export default function DynamicFilterPage() {
 	const [conditions, setConditions] = useState<FilterCondition[]>(conditionList);
 
-	const handleFieldChange = (index: number, newField: string) => {
+	const handleFieldChange = async (index: number, newField: string) => {
 		const fieldSchema = schemaList.find((f) => f.name === newField);
 		if (!fieldSchema) return;
+		let defaultValue = '';
+
+		if (fieldSchema.type === 'select') {
+			if (fieldSchema.fetchURL) {
+				const fetched = await fetchMap[fieldSchema.fetchURL]();
+				defaultValue = fetched?.[0] ?? '';
+			} else if (fieldSchema.values?.length) {
+				defaultValue = fieldSchema.values[0];
+			}
+		}
 		setConditions((prev) =>
 			prev.map((condition, i) =>
 				i === index
@@ -17,10 +28,7 @@ export default function DynamicFilterPage() {
 							...condition,
 							field: newField,
 							operator: fieldSchema.operators[0],
-							value:
-								fieldSchema.type === 'select' && fieldSchema.values && fieldSchema.values.length > 0
-									? fieldSchema.values[0]
-									: '',
+							value: defaultValue,
 						}
 					: condition
 			)

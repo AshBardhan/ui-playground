@@ -6,4 +6,5 @@ export interface FilterFieldSchema {
 	type: FieldType;
 	operators: string[]; // valid operators (e.g., '=', '!=', 'in')
 	values?: string[]; // only for select-based (e.g., ['Active', 'Inactive'])
+	fetchURL?: string; // optional URL to fetch values dynamically
 }

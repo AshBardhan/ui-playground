@@ -20,4 +20,11 @@ export const schemaList: FilterFieldSchema[] = [
 		type: 'string',
 		operators: ['is', 'is not', 'contains', 'starts with', 'ends with'],
 	},
+	{
+		name: 'campaign',
+		label: 'Campaign Name',
+		type: 'select',
+		operators: ['is', 'is not', 'contains', 'starts with', 'ends with'],
+		fetchURL: '/api/campaigns',
+	},
 ];
