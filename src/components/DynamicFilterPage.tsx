@@ -29,7 +29,7 @@ export default function DynamicFilterPage() {
 		// Update the condition
 		setConditions((prev) =>
 			prev.map((condition, i) =>
-				i === index
+				i === index && newField !== condition.field
 					? {
 							...condition,
 							field: newField,
@@ -41,20 +41,30 @@ export default function DynamicFilterPage() {
 		);
 	};
 
-	const handleLogicalOperatorChange = (index: number, newOperator: LogicalOperator) => {
+	const handleLogicalOperatorChange = (index: number, newLogicalOperator: LogicalOperator) => {
 		setConditions((prev) =>
-			prev.map((condition, i) => (i === index ? { ...condition, logicalOperator: newOperator } : condition))
+			prev.map((condition, i) =>
+				i === index && condition.logicalOperator !== newLogicalOperator
+					? { ...condition, logicalOperator: newLogicalOperator }
+					: condition
+			)
 		);
 	};
 
 	const handleOperatorChange = (index: number, newOperator: string) => {
 		setConditions((prev) =>
-			prev.map((condition, i) => (i === index ? { ...condition, operator: newOperator } : condition))
+			prev.map((condition, i) =>
+				i === index && condition.operator !== newOperator ? { ...condition, operator: newOperator } : condition
+			)
 		);
 	};
 
 	const handleValueChange = (index: number, newValue: string | number) => {
-		setConditions((prev) => prev.map((condition, i) => (i === index ? { ...condition, value: newValue } : condition)));
+		setConditions((prev) =>
+			prev.map((condition, i) =>
+				i === index && condition.value !== newValue ? { ...condition, value: newValue } : condition
+			)
+		);
 	};
 
 	const handleLeftBracketToggle = (index: number) => {
