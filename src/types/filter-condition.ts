@@ -7,4 +7,5 @@ export type FilterCondition = {
 	logicalOperator?: LogicalOperator;
 	leftBracket?: boolean;
 	rightBracket?: boolean;
+	loading?: boolean;
 };

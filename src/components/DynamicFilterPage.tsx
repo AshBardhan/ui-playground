@@ -12,13 +12,32 @@ export default function DynamicFilterPage() {
 	const handleFieldChange = async (index: number, newField: string) => {
 		const fieldSchema = schemaList.find((f) => f.name === newField);
 		if (!fieldSchema) return;
+
+		// Update the field instantly
+		setConditions((prev) =>
+			prev.map((condition, i) =>
+				i === index && newField !== condition.field
+					? {
+							...condition,
+							field: newField,
+							operator: fieldSchema.operators[0],
+							value: '',
+							loading: fieldSchema.type === 'select' && !!fieldSchema.fetchURL,
+						}
+					: condition
+			)
+		);
+
 		let defaultValue = '';
 
 		// Fetch dynamic values (if applicable)
 		if (fieldSchema.type === 'select') {
 			if (fieldSchema.fetchURL) {
+				console.log('fetching...');
 				const fetched = await fetchMap[fieldSchema.fetchURL]();
 				defaultValue = fetched?.[0] ?? '';
+
+				console.log('fetching done...', defaultValue);
 				setDynamicValuesMap((prev) => ({ ...prev, [index]: fetched }));
 			} else if (fieldSchema.values?.length) {
 				defaultValue = fieldSchema.values[0];
@@ -29,12 +48,11 @@ export default function DynamicFilterPage() {
 		// Update the condition
 		setConditions((prev) =>
 			prev.map((condition, i) =>
-				i === index && newField !== condition.field
+				i === index
 					? {
 							...condition,
-							field: newField,
-							operator: fieldSchema.operators[0],
 							value: defaultValue,
+							loading: false,
 						}
 					: condition
 			)

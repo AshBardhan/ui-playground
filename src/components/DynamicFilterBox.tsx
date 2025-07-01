@@ -64,7 +64,11 @@ const DynamicFilterBox = ({
 								<div style={{ marginLeft: `${nestedLevel * 10}px` }}>
 									<span className="mr-2 font-medium">{cond.field}</span>
 									<span className="mr-2">{cond.operator}</span>
-									<span className="font-medium">{cond.value || '--Empty--'}</span>
+									{cond.loading ? (
+										<span>Loading...</span>
+									) : (
+										<span className="font-medium">{cond.value || '--Empty--'}</span>
+									)}
 								</div>
 								{cond.rightBracket && <div style={{ marginLeft: `${endLevel * 10}px` }}>]</div>}
 								{index < conditions.length - 1 && (
@@ -86,6 +90,7 @@ const DynamicFilterBox = ({
 									<DropdownList
 										options={schema.map((field) => field.name)}
 										selectedOption={cond.field}
+										disabled={cond.loading}
 										onSelect={(val) => onFieldChange && onFieldChange(index, val)}
 									/>
 
@@ -94,6 +99,7 @@ const DynamicFilterBox = ({
 										<DropdownList
 											options={fieldSchema.operators}
 											selectedOption={cond.operator}
+											disabled={cond.loading}
 											onSelect={(val) => onOperatorChange && onOperatorChange(index, val)}
 										/>
 									)}
@@ -102,6 +108,7 @@ const DynamicFilterBox = ({
 									{fieldSchema?.type === 'select' && dynamicValues && dynamicValues.length > 0 ? (
 										<DropdownList
 											options={dynamicValues}
+											disabled={cond.loading}
 											selectedOption={cond.value as string}
 											onSelect={(val) => onValueChange && onValueChange(index, val)}
 										/>
@@ -109,8 +116,9 @@ const DynamicFilterBox = ({
 										<Input
 											type={fieldSchema?.type === 'number' ? 'number' : 'text'}
 											value={cond.value}
+											disabled={cond.loading}
 											onChange={(e) => onValueChange && onValueChange(index, e.target.value)}
-											className="border px-2 py-1 rounded w-32"
+											className="border px-2 py-1 rounded h-8 leading-none min-w-20 text-left"
 										/>
 									)}
 
