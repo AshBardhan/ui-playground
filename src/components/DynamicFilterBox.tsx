@@ -1,7 +1,7 @@
-import { FilterFieldSchema } from '../types/filter-schema';
-import { FilterCondition, LogicalOperator } from '../types/filter-condition';
+import { FilterFieldSchema } from '@/types/filter-schema';
+import { FilterCondition, LogicalOperator } from '@/types/filter-condition';
 import { Button, Input } from '@headlessui/react';
-import DropdownList from './DropdownList';
+import DropdownList from '@/components/DropdownList';
 
 interface DynamicFilterBoxProps {
 	schema: FilterFieldSchema[];

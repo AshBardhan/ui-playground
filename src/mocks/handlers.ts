@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
-import { conditionList } from '../data/condition-list';
-import { schemaList } from '../data/schema-list';
+import { conditionList } from '@/data/condition-list';
+import { schemaList } from '@/data/schema-list';
 
 export const handlers = [
 	http.get('*/api/conditions', () => {

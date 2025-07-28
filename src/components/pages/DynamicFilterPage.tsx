@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { FilterCondition, LogicalOperator } from '../types/filter-condition';
-import { FilterFieldSchema } from '../types/filter-schema';
-import DynamicFilterBox from './DynamicFilterBox';
-import { fetchMap } from '../utils/api-fetch';
+import { FilterCondition, LogicalOperator } from '@/types/filter-condition';
+import { FilterFieldSchema } from '@/types/filter-schema';
+import DynamicFilterBox from '@/components/DynamicFilterBox';
+import { fetchMap } from '@/utils/api-fetch';
 
 export default function DynamicFilterPage() {
 	const [conditions, setConditions] = useState<FilterCondition[]>([]);
@@ -33,11 +33,9 @@ export default function DynamicFilterPage() {
 		// Fetch dynamic values (if applicable)
 		if (fieldSchema.type === 'select') {
 			if (fieldSchema.fetchURL) {
-				console.log('fetching...');
 				const fetched = await fetchMap[fieldSchema.fetchURL]();
 				defaultValue = fetched?.[0] ?? '';
 
-				console.log('fetching done...', defaultValue);
 				setDynamicValuesMap((prev) => ({ ...prev, [index]: fetched }));
 			} else if (fieldSchema.values?.length) {
 				defaultValue = fieldSchema.values[0];

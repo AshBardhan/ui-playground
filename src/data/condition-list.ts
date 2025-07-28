@@ -1,4 +1,4 @@
-import { FilterCondition } from '../types/filter-condition';
+import { FilterCondition } from '@/types/filter-condition';
 
 export const conditionList: FilterCondition[] = [
 	{

@@ -1,4 +1,4 @@
-import { FilterFieldSchema } from '../types/filter-schema';
+import { FilterFieldSchema } from '@/types/filter-schema';
 
 export const schemaList: FilterFieldSchema[] = [
 	{
