@@ -7,7 +7,6 @@ const root = ReactDOM.createRoot(document.getElementById('app') as HTMLElement);
 
 async function prepare() {
 	if (import.meta.env.MODE === 'development') {
-		console.log('dev mode');
 		const { worker } = await import('./mocks/browser');
 		await worker.start({
 			onUnhandledRequest: 'bypass',

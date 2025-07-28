@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { schemaList } from '../data/schema-list';
-import { conditionList } from '../data/condition-list';
 import { FilterCondition, LogicalOperator } from '../types/filter-condition';
+import { FilterFieldSchema } from '../types/filter-schema';
 import DynamicFilterBox from './DynamicFilterBox';
 import { fetchMap } from '../utils/api-fetch';
 
 export default function DynamicFilterPage() {
-	const [conditions, setConditions] = useState<FilterCondition[]>(conditionList);
+	const [conditions, setConditions] = useState<FilterCondition[]>([]);
+	const [schemaList, setSchemaList] = useState<FilterFieldSchema[]>([]);
 	const [dynamicValuesMap, setDynamicValuesMap] = useState<Record<number, string[]>>({});
 
 	const handleFieldChange = async (index: number, newField: string) => {
@@ -115,9 +115,9 @@ export default function DynamicFilterPage() {
 
 	useEffect(() => {
 		(async () => {
-			let res = await fetch('/api/user');
-			let data = await res.json();
-			console.log('data', data);
+			const [condResp, schemaResp] = await Promise.all([fetch('/api/conditions'), fetch('/api/schema')]);
+			setConditions(await condResp.json());
+			setSchemaList(await schemaResp.json());
 		})();
 	}, []);
 
