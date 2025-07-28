@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { schemaList } from '../data/schema-list';
 import { conditionList } from '../data/condition-list';
 import { FilterCondition, LogicalOperator } from '../types/filter-condition';
@@ -112,6 +112,14 @@ export default function DynamicFilterPage() {
 			},
 		]);
 	};
+
+	useEffect(() => {
+		(async () => {
+			let res = await fetch('/api/user');
+			let data = await res.json();
+			console.log('data', data);
+		})();
+	}, []);
 
 	return (
 		<div className="p-4">
