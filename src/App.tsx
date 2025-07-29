@@ -1,7 +1,7 @@
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
-import HomePage from '@/components/pages/HomePage';
-import DynamicFilterPage from '@/components/pages/DynamicFilterPage';
+import { HomePage } from '@/components/pages/HomePage';
+import { DynamicFilterPage } from '@/components/pages/DynamicFilterPage';
 
 function App() {
 	return (

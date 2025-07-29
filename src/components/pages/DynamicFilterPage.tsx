@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { FilterCondition, LogicalOperator } from '@/types/filter-condition';
 import { FilterFieldSchema } from '@/types/filter-schema';
-import DynamicFilterBox from '@/components/DynamicFilterBox';
+import { DynamicFilterBox } from '@/components/templates/DynamicFilterBox';
 import { fetchMap } from '@/utils/api-fetch';
+import { DynamicFilterBoxSkeleton } from '@/components/templates/DynamicFilterBoxSkeleton';
 
-export default function DynamicFilterPage() {
+export const DynamicFilterPage = () => {
+	const [loading, setLoading] = useState(true);
 	const [conditions, setConditions] = useState<FilterCondition[]>([]);
 	const [schemaList, setSchemaList] = useState<FilterFieldSchema[]>([]);
 	const [dynamicValuesMap, setDynamicValuesMap] = useState<Record<number, string[]>>({});
@@ -113,37 +115,47 @@ export default function DynamicFilterPage() {
 
 	useEffect(() => {
 		(async () => {
+			setLoading(true);
 			const [condResp, schemaResp] = await Promise.all([fetch('/api/conditions'), fetch('/api/schema')]);
 			setConditions(await condResp.json());
 			setSchemaList(await schemaResp.json());
+			setLoading(false);
 		})();
 	}, []);
 
 	return (
 		<div className="p-4">
 			<h1 className="text-xl font-bold mb-4">Dynamic Filter</h1>
-			<div className="flex gap-5">
+			<div className="flex gap-5 min-h-[20vh]">
 				<div className="border p-4 rounded-lg shadow-md w-1/2">
 					<h2 className="text-lg font-semibold mb-4">Config Mode</h2>
-					<DynamicFilterBox
-						schema={schemaList}
-						conditions={conditions}
-						dynamicValuesMap={dynamicValuesMap}
-						onFieldChange={handleFieldChange}
-						onLogicalOperatorChange={handleLogicalOperatorChange}
-						onOperatorChange={handleOperatorChange}
-						onValueChange={handleValueChange}
-						onLeftBracketToggle={handleLeftBracketToggle}
-						onRightBracketToggle={handleRightBracketToggle}
-						onAddCondition={addCondition}
-						onRemoveCondition={removeCondition}
-					/>
+					{loading ? (
+						<DynamicFilterBoxSkeleton />
+					) : (
+						<DynamicFilterBox
+							schema={schemaList}
+							conditions={conditions}
+							dynamicValuesMap={dynamicValuesMap}
+							onFieldChange={handleFieldChange}
+							onLogicalOperatorChange={handleLogicalOperatorChange}
+							onOperatorChange={handleOperatorChange}
+							onValueChange={handleValueChange}
+							onLeftBracketToggle={handleLeftBracketToggle}
+							onRightBracketToggle={handleRightBracketToggle}
+							onAddCondition={addCondition}
+							onRemoveCondition={removeCondition}
+						/>
+					)}
 				</div>
 				<div className="border p-4 rounded-lg shadow-md w-1/2">
 					<h2 className="text-lg font-semibold mb-4">Read-Only Mode</h2>
-					<DynamicFilterBox schema={schemaList} conditions={conditions} isReadOnly={true} />
+					{loading ? (
+						<DynamicFilterBoxSkeleton />
+					) : (
+						<DynamicFilterBox schema={schemaList} conditions={conditions} isReadOnly={true} />
+					)}
 				</div>
 			</div>
 		</div>
 	);
-}
+};

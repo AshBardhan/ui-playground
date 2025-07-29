@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import Header from '@/components/Header';
+import { Header } from '@/components/organisms/Header';
 import { Button } from '@headlessui/react';
 
-const HomePage = () => {
+export const HomePage = () => {
 	const names = ['Ada Lovelace', 'Grace Hopper', 'Margaret Hamilton'];
 	const [likes, setLikes] = useState(0);
 
@@ -27,5 +27,3 @@ const HomePage = () => {
 		</div>
 	);
 };
-
-export default HomePage;

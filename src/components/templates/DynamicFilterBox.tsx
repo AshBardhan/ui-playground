@@ -1,7 +1,7 @@
 import { FilterFieldSchema } from '@/types/filter-schema';
 import { FilterCondition, LogicalOperator } from '@/types/filter-condition';
 import { Button, Input } from '@headlessui/react';
-import DropdownList from '@/components/DropdownList';
+import { DropdownList } from '@/components/molecules/DropdownList';
 
 interface DynamicFilterBoxProps {
 	schema: FilterFieldSchema[];
@@ -18,7 +18,7 @@ interface DynamicFilterBoxProps {
 	onRemoveCondition?: (index: number) => void;
 }
 
-const DynamicFilterBox = ({
+export const DynamicFilterBox = ({
 	schema,
 	conditions,
 	dynamicValuesMap,
@@ -167,5 +167,3 @@ const DynamicFilterBox = ({
 		</div>
 	);
 };
-
-export default DynamicFilterBox;

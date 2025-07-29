@@ -7,7 +7,7 @@ interface DropdownListProps {
 	onSelect: (value: string) => void;
 }
 
-export default function DropdownList({ options, disabled = false, selectedOption, onSelect }: DropdownListProps) {
+export const DropdownList = ({ options, disabled = false, selectedOption, onSelect }: DropdownListProps) => {
 	return (
 		<Listbox value={selectedOption} onChange={onSelect} disabled={disabled}>
 			<ListboxButton
@@ -24,4 +24,4 @@ export default function DropdownList({ options, disabled = false, selectedOption
 			</ListboxOptions>
 		</Listbox>
 	);
-}
+};
