@@ -46,7 +46,10 @@ export const DynamicFilterBox = ({
 	};
 
 	return (
-		<div className={isReadOnly ? 'space-y-2' : 'space-y-4'}>
+		<div
+			className={isReadOnly ? 'space-y-2' : 'space-y-4'}
+			data-testid={`${isReadOnly ? 'read-only' : 'config'}-mode`}
+		>
 			{conditions.map((cond, index) => {
 				const fieldSchema = schema.find((f) => f.name === cond.field);
 				const dynamicValues = dynamicValuesMap?.[index] || [];
