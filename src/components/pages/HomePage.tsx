@@ -13,12 +13,15 @@ export const HomePage = () => {
 	return (
 		<div>
 			<Header title="Develop. Preview. Ship. - Build in Vite" />
-			<ul>
+			<ul role="list">
 				{names.map((name) => (
-					<li key={name}>{name}</li>
+					<li role="listitem" key={name}>
+						{name}
+					</li>
 				))}
 			</ul>
 			<Button
+				role="button"
 				className="bg-violet-500 hover:bg-violet-600 focus:outline-2 focus:outline-offset-2 focus:outline-violet-500 active:bg-violet-700 p-4 rounded-lg font-bold text-white cursor-pointer"
 				onClick={handleClick}
 			>
