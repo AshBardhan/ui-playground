@@ -46,10 +46,7 @@ export const DynamicFilterBox = ({
 	};
 
 	return (
-		<div
-			className={isReadOnly ? 'space-y-2' : 'space-y-4'}
-			data-testid={`${isReadOnly ? 'read-only' : 'config'}-mode`}
-		>
+		<div className={isReadOnly ? 'space-y-2' : 'space-y-4'} data-testid={`${isReadOnly ? 'read-only' : 'config'}-mode`}>
 			{conditions.map((cond, index) => {
 				const fieldSchema = schema.find((f) => f.name === cond.field);
 				const dynamicValues = dynamicValuesMap?.[index] || [];
@@ -134,6 +131,7 @@ export const DynamicFilterBox = ({
 									{/* Remove Condition */}
 									{conditions.length > 1 && (
 										<Button
+											type="button"
 											onClick={() => onRemoveCondition && onRemoveCondition(index)}
 											className="text-red-500 hover:text-red-700"
 										>
@@ -163,7 +161,11 @@ export const DynamicFilterBox = ({
 
 			{/* Add Condition */}
 			{!isReadOnly && (
-				<Button onClick={onAddCondition} className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+				<Button
+					type="button"
+					onClick={onAddCondition}
+					className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+				>
 					Add Condition
 				</Button>
 			)}
