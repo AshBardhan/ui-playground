@@ -2,12 +2,11 @@ import '@testing-library/jest-dom';
 import { beforeAll, afterAll, afterEach } from 'vitest';
 import { server } from '@/mocks/server';
 
-class ResizeObserver {
+global.ResizeObserver = class {
 	observe() {}
 	unobserve() {}
 	disconnect() {}
-}
-(global as any).ResizeObserver = ResizeObserver;
+};
 
 beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
