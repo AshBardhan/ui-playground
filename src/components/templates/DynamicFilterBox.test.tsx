@@ -4,6 +4,10 @@ import { DynamicFilterBox } from './DynamicFilterBox';
 import { schemaList } from '@/data/schema-list';
 import { conditionList } from '@/data/condition-list';
 
+const getInputOrText = (container: HTMLElement, value: string | number) => {
+	return within(container).queryByDisplayValue(value) ?? within(container).queryByText(value);
+};
+
 describe('DynamicFilterBox', async () => {
 	it('should render the conditions in read-only mode', async () => {
 		render(<DynamicFilterBox isReadOnly={true} schema={schemaList} conditions={conditionList} />);
@@ -37,9 +41,9 @@ describe('DynamicFilterBox', async () => {
 
 		groups.forEach((group, index) => {
 			const { field, operator, value } = conditionList[index];
-			expect(within(group).getByText(field)).toBeInTheDocument();
-			expect(within(group).getByText(operator)).toBeInTheDocument();
-			expect(within(group).getByDisplayValue(value)).toBeInTheDocument();
+			expect(getInputOrText(group, field)).toBeInTheDocument();
+			expect(getInputOrText(group, operator)).toBeInTheDocument();
+			expect(getInputOrText(group, value)).toBeInTheDocument();
 		});
 	});
 });

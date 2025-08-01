@@ -6,7 +6,6 @@ import { DropdownList } from '@/components/molecules/DropdownList';
 interface DynamicFilterBoxProps {
 	schema: FilterFieldSchema[];
 	conditions: FilterCondition[];
-	dynamicValuesMap?: Record<number, string[]>;
 	isReadOnly?: boolean;
 	onFieldChange?: (index: number, field: string) => void;
 	onLogicalOperatorChange?: (index: number, operator: LogicalOperator) => void;
@@ -21,7 +20,6 @@ interface DynamicFilterBoxProps {
 export const DynamicFilterBox = ({
 	schema,
 	conditions,
-	dynamicValuesMap,
 	isReadOnly = false,
 	onFieldChange,
 	onLogicalOperatorChange,
@@ -35,12 +33,8 @@ export const DynamicFilterBox = ({
 	const getBracketLevel = (index: number) => {
 		let level = 0;
 		for (let i = 0; i < index; i++) {
-			if (conditions[i].leftBracket) {
-				level++;
-			}
-			if (conditions[i].rightBracket) {
-				level--;
-			}
+			if (conditions[i].leftBracket) level++;
+			if (conditions[i].rightBracket) level--;
 		}
 		return level;
 	};
@@ -49,18 +43,19 @@ export const DynamicFilterBox = ({
 		<div className={isReadOnly ? 'space-y-2' : 'space-y-4'} data-testid={`${isReadOnly ? 'read-only' : 'config'}-mode`}>
 			{conditions.map((cond, index) => {
 				const fieldSchema = schema.find((f) => f.name === cond.field);
-				const dynamicValues = dynamicValuesMap?.[index] || [];
-				let startLevel = getBracketLevel(index);
-				let nestedLevel = (startLevel > 0 ? startLevel : 0) + (cond.leftBracket ? 1 : 0);
-				let endLevel = getBracketLevel(index + 1);
-				endLevel = endLevel > 0 ? endLevel : 0;
+
+				const startLevel = getBracketLevel(index);
+				const nestedLevel = (startLevel > 0 ? startLevel : 0) + (cond.leftBracket ? 1 : 0);
+				const endLevel = Math.max(getBracketLevel(index + 1), 0);
 
 				return (
 					<div role="group" aria-label="Filter Condition Group" key={index}>
 						{isReadOnly ? (
 							<>
 								{cond.leftBracket && <div style={{ marginLeft: `${startLevel * 10}px` }}>[</div>}
+
 								<div style={{ marginLeft: `${nestedLevel * 10}px` }}>where</div>
+
 								<div style={{ marginLeft: `${nestedLevel * 10}px` }}>
 									<span className="mr-2 font-medium">{cond.field}</span>
 									<span className="mr-2">{cond.operator}</span>
@@ -70,7 +65,9 @@ export const DynamicFilterBox = ({
 										<span className="font-medium">{cond.value || '--Empty--'}</span>
 									)}
 								</div>
+
 								{cond.rightBracket && <div style={{ marginLeft: `${endLevel * 10}px` }}>]</div>}
+
 								{index < conditions.length - 1 && (
 									<div className="my-2 text-pink-600" style={{ marginLeft: `${endLevel * 10}px` }}>
 										{cond.logicalOperator}
@@ -82,8 +79,10 @@ export const DynamicFilterBox = ({
 								<div className="flex gap-3 items-center">
 									{/* Left Bracket */}
 									<div
-										className={`border-4 h-10 w-2 border-r-0 ${cond.leftBracket ? 'border-black' : 'border-gray-300'} hover:border-gray-600`}
-										onClick={() => onLeftBracketToggle && onLeftBracketToggle(index)}
+										className={`border-4 h-10 w-2 border-r-0 ${
+											cond.leftBracket ? 'border-black' : 'border-gray-300'
+										} hover:border-gray-600`}
+										onClick={() => onLeftBracketToggle?.(index)}
 									></div>
 
 									{/* Field dropdown */}
@@ -91,7 +90,7 @@ export const DynamicFilterBox = ({
 										options={schema.map((field) => field.name)}
 										selectedOption={cond.field}
 										disabled={cond.loading}
-										onSelect={(val) => onFieldChange && onFieldChange(index, val)}
+										onSelect={(val) => onFieldChange?.(index, val)}
 									/>
 
 									{/* Operator dropdown */}
@@ -100,58 +99,56 @@ export const DynamicFilterBox = ({
 											options={fieldSchema.operators}
 											selectedOption={cond.operator}
 											disabled={cond.loading}
-											onSelect={(val) => onOperatorChange && onOperatorChange(index, val)}
+											onSelect={(val) => onOperatorChange?.(index, val)}
 										/>
 									)}
 
-									{/* Value input */}
-									{fieldSchema?.type === 'select' && dynamicValues && dynamicValues.length > 0 ? (
+									{/* Value input or dropdown */}
+									{fieldSchema?.type === 'select' && fieldSchema?.values?.length ? (
 										<DropdownList
-											options={dynamicValues}
+											options={fieldSchema.values}
 											disabled={cond.loading}
 											selectedOption={cond.value as string}
-											onSelect={(val) => onValueChange && onValueChange(index, val)}
+											onSelect={(val) => onValueChange?.(index, val)}
 										/>
 									) : (
 										<Input
 											type={fieldSchema?.type === 'number' ? 'number' : 'text'}
 											value={cond.value}
 											disabled={cond.loading}
-											onChange={(e) => onValueChange && onValueChange(index, e.target.value)}
+											onChange={(e) => onValueChange?.(index, e.target.value)}
 											className="border px-2 py-1 rounded h-8 leading-none min-w-20 text-left"
 										/>
 									)}
 
 									{/* Right Bracket */}
 									<div
-										className={`border-4 h-10 w-2 border-l-0 ${cond.rightBracket ? 'border-black' : 'border-gray-300'} hover:border-gray-600`}
-										onClick={() => onRightBracketToggle && onRightBracketToggle(index)}
+										className={`border-4 h-10 w-2 border-l-0 ${
+											cond.rightBracket ? 'border-black' : 'border-gray-300'
+										} hover:border-gray-600`}
+										onClick={() => onRightBracketToggle?.(index)}
 									></div>
 
 									{/* Remove Condition */}
 									{conditions.length > 1 && (
 										<Button
 											type="button"
-											onClick={() => onRemoveCondition && onRemoveCondition(index)}
+											onClick={() => onRemoveCondition?.(index)}
 											className="text-red-500 hover:text-red-700"
 										>
 											✕
 										</Button>
 									)}
 								</div>
+
 								{index < conditions.length - 1 && (
-									<>
-										{/* Logical Operator dropdown */}
-										<div className="my-4">
-											<DropdownList
-												options={['AND', 'OR']}
-												selectedOption={cond.logicalOperator || 'AND'}
-												onSelect={(val) =>
-													onLogicalOperatorChange && onLogicalOperatorChange(index, val as LogicalOperator)
-												}
-											/>
-										</div>
-									</>
+									<div className="my-4">
+										<DropdownList
+											options={['AND', 'OR']}
+											selectedOption={cond.logicalOperator || 'AND'}
+											onSelect={(val) => onLogicalOperatorChange?.(index, val as LogicalOperator)}
+										/>
+									</div>
 								)}
 							</>
 						)}
@@ -159,7 +156,6 @@ export const DynamicFilterBox = ({
 				);
 			})}
 
-			{/* Add Condition */}
 			{!isReadOnly && (
 				<Button
 					type="button"

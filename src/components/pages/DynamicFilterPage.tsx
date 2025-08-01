@@ -8,7 +8,6 @@ export const DynamicFilterPage = () => {
 	const [loading, setLoading] = useState(true);
 	const [conditions, setConditions] = useState<FilterCondition[]>([]);
 	const [schemaList, setSchemaList] = useState<FilterFieldSchema[]>([]);
-	const [dynamicValuesMap, setDynamicValuesMap] = useState<Record<number, string[]>>({});
 
 	const handleFieldChange = async (index: number, newField: string) => {
 		const fieldSchema = schemaList.find((f) => f.name === newField);
@@ -33,14 +32,17 @@ export const DynamicFilterPage = () => {
 
 		// Fetch dynamic values (if applicable)
 		if (fieldSchema.type === 'select') {
-			if (fieldSchema.fetchURL) {
+			if (fieldSchema.fetchURL && !fieldSchema.values) {
+				// Only fetch if values haven't been fetched yet
 				const fetchResponse = await fetch(fieldSchema.fetchURL);
 				const fetched = await fetchResponse.json();
 				defaultValue = fetched?.[0] ?? '';
-				setDynamicValuesMap((prev) => ({ ...prev, [index]: fetched }));
+				// Update the schema directly with fetched values
+				setSchemaList((prev) =>
+					prev.map((schema) => (schema.name === newField ? { ...schema, values: fetched } : schema))
+				);
 			} else if (fieldSchema.values?.length) {
 				defaultValue = fieldSchema.values[0];
-				setDynamicValuesMap((prev) => ({ ...prev, [index]: fieldSchema.values! }));
 			}
 		}
 
@@ -115,9 +117,9 @@ export const DynamicFilterPage = () => {
 	useEffect(() => {
 		(async () => {
 			setLoading(true);
-			const [condResp, schemaResp] = await Promise.all([fetch('/api/conditions'), fetch('/api/schema')]);
-			setConditions(await condResp.json());
-			setSchemaList(await schemaResp.json());
+			const [condResponse, schemaResponse] = await Promise.all([fetch('/api/conditions'), fetch('/api/schema')]);
+			setConditions(await condResponse.json());
+			setSchemaList(await schemaResponse.json());
 			setLoading(false);
 		})();
 	}, []);
@@ -134,7 +136,6 @@ export const DynamicFilterPage = () => {
 						<DynamicFilterBox
 							schema={schemaList}
 							conditions={conditions}
-							dynamicValuesMap={dynamicValuesMap}
 							onFieldChange={handleFieldChange}
 							onLogicalOperatorChange={handleLogicalOperatorChange}
 							onOperatorChange={handleOperatorChange}
