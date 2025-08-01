@@ -56,7 +56,7 @@ export const DynamicFilterBox = ({
 				endLevel = endLevel > 0 ? endLevel : 0;
 
 				return (
-					<div key={index}>
+					<div role="group" aria-label="Filter Condition Group" key={index}>
 						{isReadOnly ? (
 							<>
 								{cond.leftBracket && <div style={{ marginLeft: `${startLevel * 10}px` }}>[</div>}
