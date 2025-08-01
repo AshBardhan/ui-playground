@@ -14,14 +14,16 @@ export const DropdownList = ({ options, disabled = false, selectedOption, onSele
 		'flex items-center justify-between gap-2 border px-2 rounded h-8 min-w-20',
 		disabled ? 'opacity-50 cursor-not-allowed bg-gray-100' : 'bg-white'
 	);
+
 	return (
-		<Listbox value={selectedOption} onChange={onSelect} disabled={disabled}>
+		<Listbox value={selectedOption} onChange={onSelect} disabled={disabled} as="div">
 			{({ open }) => (
 				<>
 					<ListboxButton className={listboxClasses}>
 						<span>{selectedOption}</span>
 						{open ? <ChevronUpIcon size={16} /> : <ChevronDownIcon size={16} />}
 					</ListboxButton>
+
 					<ListboxOptions className="mt-1 bg-white border rounded shadow w-32 z-10" anchor="bottom">
 						{options.map((option) => (
 							<ListboxOption key={option} value={option}>
