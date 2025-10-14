@@ -13,9 +13,9 @@ interface CampaignListProps {
 export const CampaignList = ({ campaigns, loading = false, onCampaignClick, className }: CampaignListProps) => {
 	if (loading) {
 		return (
-			<div className={clsx('space-y-4', className)}>
+			<div className={clsx('space-y-1', className)}>
 				{Array.from({ length: 4 }).map((_, index) => (
-					<Skeleton key={index} height={120} />
+					<Skeleton key={index} height={100} />
 				))}
 			</div>
 		);

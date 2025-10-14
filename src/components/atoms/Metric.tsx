@@ -35,8 +35,8 @@ export const Metric = ({ label, value, size = 'md', variant = 'neutral', classNa
 	};
 
 	return (
-		<div className={clsx('flex flex-col', className)}>
-			<div className={clsx('text-gray-500 mb-1', labelSizeClasses[size])}>{label}</div>
+		<div className={clsx('flex flex-col gap-0.25', className)}>
+			<div className={clsx('text-gray-500', labelSizeClasses[size])}>{label}</div>
 			<div className={clsx('font-semibold', valueSizeClasses[size], variantClasses[variant])}>{formatValue(value)}</div>
 		</div>
 	);
