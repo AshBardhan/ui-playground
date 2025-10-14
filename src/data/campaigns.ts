@@ -1,0 +1,108 @@
+import { Campaign } from '@/types/campaign';
+
+export const mockCampaigns: Campaign[] = [
+	{
+		id: '1',
+		name: 'Summer Sale 2024',
+		status: 'RUNNING',
+		metrics: {
+			impressions: 125000,
+			clicks: 3200,
+			conversions: 180,
+			spend: 4500,
+		},
+		createdAt: '2024-01-15T10:30:00Z',
+		updatedAt: '2024-01-20T14:22:00Z',
+	},
+	{
+		id: '2',
+		name: 'Black Friday Campaign',
+		status: 'DRAFT',
+		metrics: {
+			impressions: 0,
+			clicks: 0,
+			conversions: 0,
+			spend: 0,
+		},
+		createdAt: '2024-01-18T09:15:00Z',
+		updatedAt: '2024-01-18T09:15:00Z',
+	},
+	{
+		id: '3',
+		name: 'Holiday Shopping Spree',
+		status: 'PAUSED',
+		metrics: {
+			impressions: 89000,
+			clicks: 2100,
+			conversions: 95,
+			spend: 3200,
+		},
+		createdAt: '2024-01-10T16:45:00Z',
+		updatedAt: '2024-01-19T11:30:00Z',
+	},
+	{
+		id: '4',
+		name: 'New Product Launch',
+		status: 'RUNNING',
+		metrics: {
+			impressions: 200000,
+			clicks: 5800,
+			conversions: 320,
+			spend: 7200,
+		},
+		createdAt: '2024-01-05T08:20:00Z',
+		updatedAt: '2024-01-21T13:45:00Z',
+	},
+	{
+		id: '5',
+		name: 'Valentine\'s Day Special',
+		status: 'ARCHIVED',
+		metrics: {
+			impressions: 75000,
+			clicks: 1800,
+			conversions: 120,
+			spend: 2800,
+		},
+		createdAt: '2023-12-20T12:00:00Z',
+		updatedAt: '2024-01-15T10:00:00Z',
+	},
+	{
+		id: '6',
+		name: 'Back to School',
+		status: 'DRAFT',
+		metrics: {
+			impressions: 0,
+			clicks: 0,
+			conversions: 0,
+			spend: 0,
+		},
+		createdAt: '2024-01-22T14:30:00Z',
+		updatedAt: '2024-01-22T14:30:00Z',
+	},
+	{
+		id: '7',
+		name: 'Tech Gadgets Showcase',
+		status: 'RUNNING',
+		metrics: {
+			impressions: 150000,
+			clicks: 4200,
+			conversions: 280,
+			spend: 5600,
+		},
+		createdAt: '2024-01-12T11:15:00Z',
+		updatedAt: '2024-01-21T16:20:00Z',
+	},
+	{
+		id: '8',
+		name: 'Fashion Week Collection',
+		status: 'PAUSED',
+		metrics: {
+			impressions: 95000,
+			clicks: 2400,
+			conversions: 150,
+			spend: 3800,
+		},
+		createdAt: '2024-01-08T15:30:00Z',
+		updatedAt: '2024-01-20T09:45:00Z',
+	},
+];

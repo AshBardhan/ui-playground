@@ -3,5 +3,5 @@ interface HeaderProps {
 }
 
 export const Header = ({ title }: HeaderProps) => {
-	return <h1 className="text-3xl font-bold underline">{title ? title : 'Default title'}</h1>;
+	return <h1 className="text-3xl font-bold">{title ? title : 'Default title'}</h1>;
 };
