@@ -1,4 +1,5 @@
 import { Card } from '@/components/molecules/Card';
+import { Text } from '@/components/atoms/Text';
 
 const pages = [
 	{
@@ -18,12 +19,16 @@ const pages = [
 export const HomePage = () => {
 	return (
 		<>
-			<h1 className="text-3xl font-bold text-gray-900 mb-6">Implemented Pages</h1>
+			<Text variant="h1" className="mb-6">
+				Implemented Pages
+			</Text>
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 				{pages.map((page) => (
 					<Card key={page.link} href={page.link}>
-						<h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">{page.title}</h2>
-						<p className="font-normal text-gray-700">{page.description}</p>
+						<Text variant="h2" className="mb-2">
+							{page.title}
+						</Text>
+						<Text>{page.description}</Text>
 					</Card>
 				))}
 			</div>

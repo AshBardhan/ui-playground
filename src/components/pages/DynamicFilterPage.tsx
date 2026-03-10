@@ -4,6 +4,7 @@ import { FilterFieldSchema } from '@/types/filter-schema';
 import { DynamicFilterBox } from '@/components/templates/DynamicFilterBox';
 import { DynamicFilterBoxSkeleton } from '@/components/templates/DynamicFilterBoxSkeleton';
 import { Card } from '@/components/molecules/Card';
+import { Text } from '@/components/atoms/Text';
 
 export const DynamicFilterPage = () => {
 	const [loading, setLoading] = useState(true);
@@ -127,10 +128,12 @@ export const DynamicFilterPage = () => {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<h1 className="text-3xl font-bold text-gray-900">Dynamic Filter</h1>
+			<Text variant="h1">Dynamic Filter</Text>
 			<div className="flex flex-col lg:flex-row gap-5 min-h-[20vh]">
 				<Card className="flex-1">
-					<h2 className="text-lg font-semibold mb-4">Config Mode</h2>
+					<Text variant="h4" className="mb-4">
+						Config Mode
+					</Text>
 					{loading ? (
 						<DynamicFilterBoxSkeleton />
 					) : (
@@ -149,7 +152,9 @@ export const DynamicFilterPage = () => {
 					)}
 				</Card>
 				<Card className="flex-1">
-					<h2 className="text-lg font-semibold mb-4">Read-Only Mode</h2>
+					<Text variant="h4" className="mb-4">
+						Read-Only Mode
+					</Text>
 					{loading ? (
 						<DynamicFilterBoxSkeleton />
 					) : (

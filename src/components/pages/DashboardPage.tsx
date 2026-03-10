@@ -3,6 +3,7 @@ import { Campaign, CampaignFilters } from '@/types/campaign';
 import { DashboardLayout } from '@/components/templates/DashboardLayout';
 import { CampaignList } from '@/components/templates/CampaignList';
 import { FilterPanel } from '@/components/organisms/FilterPanel';
+import { Text } from '@/components/atoms/Text';
 
 export const DashboardPage = () => {
 	const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -84,7 +85,7 @@ export const DashboardPage = () => {
 
 	return (
 		<div className="flex flex-col gap-4">
-			<h1 className="text-3xl font-bold text-gray-900">Campaigns {!loading ? `(${filteredCampaigns.length})` : ''}</h1>
+			<Text variant="h1">Campaigns {!loading ? `(${filteredCampaigns.length})` : ''}</Text>
 			<DashboardLayout
 				leftContent={
 					<CampaignList campaigns={filteredCampaigns} loading={loading} onCampaignClick={handleCampaignClick} />
