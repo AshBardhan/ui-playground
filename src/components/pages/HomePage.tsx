@@ -1,32 +1,34 @@
-import { useState } from 'react';
-import { Header } from '@/components/organisms/Header';
-import { Button } from '@headlessui/react';
+import { Card } from '@/components/molecules/Card';
+
+const pages = [
+	{
+		title: 'Dashboard',
+		link: '/dashboard',
+		description:
+			'Campaign management dashboard with filtering capabilities. View and manage campaigns with status, budget, and performance metrics.',
+	},
+	{
+		title: 'Dynamic Filter',
+		link: '/dynamic-filter',
+		description:
+			'Advanced dynamic filtering system with configurable conditions, operators, and logical grouping for complex queries.',
+	},
+];
 
 export const HomePage = () => {
-	const names = ['Ada Lovelace', 'Grace Hopper', 'Margaret Hamilton'];
-	const [likes, setLikes] = useState(0);
-
-	const handleClick = () => {
-		setLikes(likes + 1);
-	};
-
 	return (
-		<div>
-			<Header title="Develop. Preview. Ship. - Build in Vite" />
-			<ul role="list">
-				{names.map((name) => (
-					<li role="listitem" key={name}>
-						{name}
-					</li>
-				))}
-			</ul>
-			<Button
-				role="button"
-				className="bg-violet-500 hover:bg-violet-600 focus:outline-2 focus:outline-offset-2 focus:outline-violet-500 active:bg-violet-700 p-4 rounded-lg font-bold text-white cursor-pointer"
-				onClick={handleClick}
-			>
-				Like ({likes})
-			</Button>
+		<div className="min-h-screen bg-gray-50">
+			<div className="container mx-auto px-4 py-8">
+				<h1 className="text-3xl font-bold text-gray-900 mb-6">Implemented Pages</h1>
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+					{pages.map((page) => (
+						<Card key={page.link} href={page.link}>
+							<h2 className="mb-2 text-2xl font-bold tracking-tight text-gray-900">{page.title}</h2>
+							<p className="font-normal text-gray-700">{page.description}</p>
+						</Card>
+					))}
+				</div>
+			</div>
 		</div>
 	);
 };

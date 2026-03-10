@@ -1,0 +1,27 @@
+import { Link } from 'react-router-dom';
+import { ReactNode } from 'react';
+import clsx from 'clsx';
+
+interface CardProps {
+	children: ReactNode;
+	className?: string;
+	href?: string;
+}
+
+export const Card = ({ children, className, href }: CardProps) => {
+	const classes = clsx(
+		'block p-6 bg-white border border-gray-200 rounded-lg shadow transition-colors',
+		href && 'hover:bg-gray-100 cursor-pointer',
+		className
+	);
+
+	if (href) {
+		return (
+			<Link to={href} className={classes}>
+				{children}
+			</Link>
+		);
+	}
+
+	return <div className={classes}>{children}</div>;
+};
