@@ -3,7 +3,6 @@ import { Campaign, CampaignFilters } from '@/types/campaign';
 import { DashboardLayout } from '@/components/templates/DashboardLayout';
 import { CampaignList } from '@/components/templates/CampaignList';
 import { FilterPanel } from '@/components/organisms/FilterPanel';
-import { Header } from '@/components/organisms/Header';
 
 export const DashboardPage = () => {
 	const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -68,7 +67,7 @@ export const DashboardPage = () => {
 
 	if (error) {
 		return (
-			<div className="min-h-screen bg-gray-50 flex items-center justify-center">
+			<div className="h-full flex items-center justify-center">
 				<div className="text-center">
 					<div className="text-red-600 text-lg mb-2">Error loading campaigns</div>
 					<div className="text-gray-600">{error}</div>
@@ -84,8 +83,8 @@ export const DashboardPage = () => {
 	}
 
 	return (
-		<div className="p-4 flex flex-col gap-4">
-			<Header title={`Campaigns ${!loading ? `(${filteredCampaigns.length})` : ''}`} />
+		<div className="flex flex-col gap-4">
+			<h1 className="text-3xl font-bold text-gray-900">Campaigns {!loading ? `(${filteredCampaigns.length})` : ''}</h1>
 			<DashboardLayout
 				leftContent={
 					<CampaignList campaigns={filteredCampaigns} loading={loading} onCampaignClick={handleCampaignClick} />

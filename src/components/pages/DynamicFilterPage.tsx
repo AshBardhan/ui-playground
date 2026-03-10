@@ -3,6 +3,7 @@ import { FilterCondition, LogicalOperator } from '@/types/filter-condition';
 import { FilterFieldSchema } from '@/types/filter-schema';
 import { DynamicFilterBox } from '@/components/templates/DynamicFilterBox';
 import { DynamicFilterBoxSkeleton } from '@/components/templates/DynamicFilterBoxSkeleton';
+import { Card } from '@/components/molecules/Card';
 
 export const DynamicFilterPage = () => {
 	const [loading, setLoading] = useState(true);
@@ -125,10 +126,10 @@ export const DynamicFilterPage = () => {
 	}, []);
 
 	return (
-		<div className="p-4">
-			<h1 className="text-xl font-bold mb-4">Dynamic Filter</h1>
-			<div className="flex gap-5 min-h-[20vh]">
-				<div className="border p-4 rounded-lg shadow-md w-1/2">
+		<div className="flex flex-col gap-4">
+			<h1 className="text-3xl font-bold text-gray-900">Dynamic Filter</h1>
+			<div className="flex flex-col lg:flex-row gap-5 min-h-[20vh]">
+				<Card className="flex-1">
 					<h2 className="text-lg font-semibold mb-4">Config Mode</h2>
 					{loading ? (
 						<DynamicFilterBoxSkeleton />
@@ -146,15 +147,15 @@ export const DynamicFilterPage = () => {
 							onRemoveCondition={removeCondition}
 						/>
 					)}
-				</div>
-				<div className="border p-4 rounded-lg shadow-md w-1/2">
+				</Card>
+				<Card className="flex-1">
 					<h2 className="text-lg font-semibold mb-4">Read-Only Mode</h2>
 					{loading ? (
 						<DynamicFilterBoxSkeleton />
 					) : (
 						<DynamicFilterBox schema={schemaList} conditions={conditions} isReadOnly={true} />
 					)}
-				</div>
+				</Card>
 			</div>
 		</div>
 	);
