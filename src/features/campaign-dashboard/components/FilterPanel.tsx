@@ -1,6 +1,6 @@
-import { CampaignStatus, CampaignFilters } from '@/types/campaign';
-import { SearchBox } from '@/components/atoms/SearchBox';
-import { FilterGroup } from '@/components/molecules/FilterGroup';
+import { CampaignStatus, CampaignFilters } from '../types/campaign';
+import { SearchBox } from '@/components/ui/SearchBox';
+import { FilterGroup } from '@/components/ui/FilterGroup';
 import { Button } from '@headlessui/react';
 import clsx from 'clsx';
 
@@ -11,6 +11,13 @@ interface FilterPanelProps {
 }
 
 const statusOptions: CampaignStatus[] = ['DRAFT', 'RUNNING', 'PAUSED', 'ARCHIVED'];
+
+const statusLabels: Record<CampaignStatus, string> = {
+	DRAFT: 'Draft',
+	RUNNING: 'Running',
+	PAUSED: 'Paused',
+	ARCHIVED: 'Archived',
+};
 
 export const FilterPanel = ({ filters, onFiltersChange, className }: FilterPanelProps) => {
 	const handleSearchChange = (search: string) => {
@@ -53,6 +60,7 @@ export const FilterPanel = ({ filters, onFiltersChange, className }: FilterPanel
 					options={statusOptions}
 					selectedValues={filters.status || []}
 					onChange={handleStatusChange}
+					labels={statusLabels}
 				/>
 			</div>
 

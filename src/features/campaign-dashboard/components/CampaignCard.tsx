@@ -1,6 +1,6 @@
-import { Campaign } from '@/types/campaign';
-import { Badge } from '@/components/atoms/Badge';
-import { Metric } from '@/components/atoms/Metric';
+import { Campaign } from '../types/campaign';
+import { Badge } from '@/components/ui/Badge';
+import { Metric } from '@/components/ui/Metric';
 import clsx from 'clsx';
 
 const getStatusVariant = (status: Campaign['status']) => {

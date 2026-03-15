@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Campaign, CampaignFilters } from '@/types/campaign';
-import { DashboardLayout } from '@/components/templates/DashboardLayout';
-import { CampaignList } from '@/components/templates/CampaignList';
-import { FilterPanel } from '@/components/organisms/FilterPanel';
-import { Text } from '@/components/atoms/Text';
+import { Campaign, CampaignFilters } from './types/campaign';
+import { CampaignDashboardLayout } from './components/CampaignDashboardLayout';
+import { CampaignList } from './components/CampaignList';
+import { FilterPanel } from './components/FilterPanel';
+import { Text } from '@/components/ui/Text';
 
-export const DashboardPage = () => {
+export const CampaignDashboardPage = () => {
 	const [campaigns, setCampaigns] = useState<Campaign[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -86,7 +86,7 @@ export const DashboardPage = () => {
 	return (
 		<div className="flex flex-col gap-4">
 			<Text variant="h1">Campaigns {!loading ? `(${filteredCampaigns.length})` : ''}</Text>
-			<DashboardLayout
+			<CampaignDashboardLayout
 				leftContent={
 					<CampaignList campaigns={filteredCampaigns} loading={loading} onCampaignClick={handleCampaignClick} />
 				}

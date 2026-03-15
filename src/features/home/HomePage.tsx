@@ -1,10 +1,10 @@
-import { Card } from '@/components/molecules/Card';
-import { Text } from '@/components/atoms/Text';
+import { Card } from '@/components/ui/Card';
+import { Text } from '@/components/ui/Text';
 
 const pages = [
 	{
-		title: 'Dashboard',
-		link: '/dashboard',
+		title: 'Campaign Dashboard',
+		link: '/campaign-dashboard',
 		description:
 			'Campaign management dashboard with filtering capabilities. View and manage campaigns with status, budget, and performance metrics.',
 	},

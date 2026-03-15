@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { DropdownList } from '@/components/molecules/DropdownList';
+import { DropdownList } from '@/components/ui/DropdownList';
 import { useState, useEffect } from 'react';
 
 const pages = [

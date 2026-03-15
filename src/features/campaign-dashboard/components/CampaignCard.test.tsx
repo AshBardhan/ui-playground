@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { CampaignCard } from './CampaignCard';
-import { Campaign } from '@/types/campaign';
+import { Campaign } from '../types/campaign';
 
 const mockCampaign: Campaign = {
 	id: '1',

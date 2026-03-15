@@ -1,24 +1,24 @@
-import { CampaignStatus } from '@/types/campaign';
 import { Button } from '@headlessui/react';
 import clsx from 'clsx';
 
-interface FilterGroupProps {
+interface FilterGroupProps<T extends string> {
 	title: string;
-	options: CampaignStatus[];
-	selectedValues: CampaignStatus[];
-	onChange: (values: CampaignStatus[]) => void;
+	options: T[];
+	selectedValues: T[];
+	onChange: (values: T[]) => void;
+	labels?: Record<T, string>;
 	className?: string;
 }
 
-const statusLabels: Record<CampaignStatus, string> = {
-	DRAFT: 'Draft',
-	RUNNING: 'Running',
-	PAUSED: 'Paused',
-	ARCHIVED: 'Archived',
-};
-
-export const FilterGroup = ({ title, options, selectedValues, onChange, className }: FilterGroupProps) => {
-	const handleToggle = (option: CampaignStatus) => {
+export const FilterGroup = <T extends string>({
+	title,
+	options,
+	selectedValues,
+	onChange,
+	labels,
+	className,
+}: FilterGroupProps<T>) => {
+	const handleToggle = (option: T) => {
 		const newValues = selectedValues.includes(option)
 			? selectedValues.filter((value) => value !== option)
 			: [...selectedValues, option];
@@ -32,6 +32,8 @@ export const FilterGroup = ({ title, options, selectedValues, onChange, classNam
 	const handleClearAll = () => {
 		onChange([]);
 	};
+
+	const getLabel = (option: T) => labels?.[option] || option;
 
 	return (
 		<div className={clsx('space-y-3', className)}>
@@ -65,7 +67,7 @@ export const FilterGroup = ({ title, options, selectedValues, onChange, classNam
 								onChange={() => handleToggle(option)}
 								className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
 							/>
-							<span className="text-sm text-gray-700">{statusLabels[option]}</span>
+							<span className="text-sm text-gray-700">{getLabel(option)}</span>
 						</label>
 					);
 				})}

@@ -1,13 +1,13 @@
 import { ReactNode } from 'react';
 import clsx from 'clsx';
 
-interface DashboardLayoutProps {
+interface CampaignDashboardLayoutProps {
 	leftContent: ReactNode;
 	rightContent: ReactNode;
 	className?: string;
 }
 
-export const DashboardLayout = ({ leftContent, rightContent, className }: DashboardLayoutProps) => {
+export const CampaignDashboardLayout = ({ leftContent, rightContent, className }: CampaignDashboardLayoutProps) => {
 	return (
 		<div className={clsx('min-h-screen', className)}>
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

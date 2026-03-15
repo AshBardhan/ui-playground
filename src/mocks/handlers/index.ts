@@ -1,8 +1,8 @@
 import { delay, http, HttpResponse } from 'msw';
-import { conditionList } from '@/data/condition-list';
-import { schemaList } from '@/data/schema-list';
-import { campaignList } from '@/data/campaign-list';
-import { mockCampaigns } from '@/data/campaigns';
+import { conditionList } from '@/features/dynamic-filter/data/condition-list';
+import { schemaList } from '@/features/dynamic-filter/data/schema-list';
+import { campaignList } from '@/features/campaign-dashboard/data/campaign-list';
+import { mockCampaigns } from '@/features/campaign-dashboard/data/campaigns';
 
 export const handlers = [
 	http.get('*/api/conditions', () => {

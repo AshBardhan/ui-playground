@@ -1,6 +1,6 @@
-import { Campaign } from '@/types/campaign';
-import { CampaignCard } from '@/components/templates/CampaignCard';
-import { Skeleton } from '@/components/atoms/Skeleton';
+import { Campaign } from '../types/campaign';
+import { CampaignCard } from './CampaignCard';
+import { Skeleton } from '@/components/ui/Skeleton';
 import clsx from 'clsx';
 
 interface CampaignListProps {

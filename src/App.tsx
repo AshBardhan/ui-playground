@@ -1,9 +1,9 @@
 import './App.css';
-import { Route, Routes } from 'react-router-dom';
-import { HomePage } from '@/components/pages/HomePage';
-import { DynamicFilterPage } from '@/components/pages/DynamicFilterPage';
-import { DashboardPage } from '@/components/pages/DashboardPage';
-import { Header } from '@/components/organisms/Header';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { HomePage } from '@/features/home/HomePage';
+import { DynamicFilterPage } from '@/features/dynamic-filter/DynamicFilterPage';
+import { CampaignDashboardPage } from '@/features/campaign-dashboard/CampaignDashboardPage';
+import { Header } from '@/components/layout/Header';
 
 function App() {
 	return (
@@ -14,7 +14,8 @@ function App() {
 					<Routes>
 						<Route path="/" element={<HomePage />} />
 						<Route path="/dynamic-filter" element={<DynamicFilterPage />} />
-						<Route path="/dashboard" element={<DashboardPage />} />
+						<Route path="/campaign-dashboard" element={<CampaignDashboardPage />} />
+						<Route path="*" element={<Navigate to="/" replace />} />
 					</Routes>
 				</div>
 			</main>

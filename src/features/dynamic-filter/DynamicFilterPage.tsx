@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { FilterCondition, LogicalOperator } from '@/types/filter-condition';
-import { FilterFieldSchema } from '@/types/filter-schema';
-import { DynamicFilterBox } from '@/components/templates/DynamicFilterBox';
-import { DynamicFilterBoxSkeleton } from '@/components/templates/DynamicFilterBoxSkeleton';
-import { Card } from '@/components/molecules/Card';
-import { Text } from '@/components/atoms/Text';
+import { FilterCondition, LogicalOperator } from './types/filter-condition';
+import { FilterFieldSchema } from './types/filter-schema';
+import { DynamicFilterBox } from './components/DynamicFilterBox';
+import { DynamicFilterBoxSkeleton } from './components/DynamicFilterBoxSkeleton';
+import { Card } from '@/components/ui/Card';
+import { Text } from '@/components/ui/Text';
 
 export const DynamicFilterPage = () => {
 	const [loading, setLoading] = useState(true);

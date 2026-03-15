@@ -1,4 +1,4 @@
-import { Campaign } from '@/types/campaign';
+import { Campaign } from '../types/campaign';
 
 export const mockCampaigns: Campaign[] = [
 	{
@@ -55,7 +55,7 @@ export const mockCampaigns: Campaign[] = [
 	},
 	{
 		id: '5',
-		name: 'Valentine\'s Day Special',
+		name: "Valentine's Day Special",
 		status: 'ARCHIVED',
 		metrics: {
 			impressions: 75000,
