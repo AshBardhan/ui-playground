@@ -28,15 +28,15 @@ export const useFetch = <T>(options: UseFetchOptions<T>): UseFetchReturn<T> => {
 
 		const fetchData = async () => {
 			if (!url) {
-				setData(null);
 				setLoading(false);
+				setData(null);
 				setError(null);
 				return;
 			}
 
-			// Clear previous data and set loading immediately
-			setData(null);
+			// Set loading first, then clear previous data and error
 			setLoading(true);
+			setData(null);
 			setError(null);
 
 			try {
@@ -66,17 +66,21 @@ export const useFetch = <T>(options: UseFetchOptions<T>): UseFetchReturn<T> => {
 				}
 
 				const responseData = await response.json();
+
+				// Set data and clear error, then set loading to false
 				setData(responseData);
 				setError(null);
+				setLoading(false);
 				onSuccess?.(responseData);
 			} catch (err) {
 				if (err instanceof Error && err.name !== 'AbortError') {
 					const errorObj = err instanceof Error ? err : new Error('An error occurred');
+					// Set error and clear data, then set loading to false
 					setError(errorObj);
+					setData(null);
+					setLoading(false);
 					onError?.(errorObj);
 				}
-			} finally {
-				setLoading(false);
 			}
 		};
 
