@@ -14,6 +14,12 @@ const pages = [
 		description:
 			'Advanced dynamic filtering system with configurable conditions, operators, and logical grouping for complex queries.',
 	},
+	{
+		title: 'Analytics Dashboard',
+		link: '/analytics-dashboard',
+		description:
+			'Interactive analytics dashboard with D3 visualizations, data tables with search and sorting, and real-time metrics in a responsive grid layout.',
+	},
 ];
 
 export const HomePage = () => {

@@ -3,5 +3,12 @@ interface SkeletonProps {
 }
 
 export const Skeleton = ({ height = 10 }: SkeletonProps) => {
-	return <div className={`w-full bg-gray-200 rounded animate-pulse`} style={{ height }}></div>;
+	return (
+		<div
+			className={`w-full bg-gray-200 rounded animate-pulse`}
+			style={{ height }}
+			role="status"
+			aria-label="Loading..."
+		></div>
+	);
 };

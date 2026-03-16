@@ -3,6 +3,7 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import { HomePage } from '@/features/home/HomePage';
 import { DynamicFilterPage } from '@/features/dynamic-filter/DynamicFilterPage';
 import { CampaignDashboardPage } from '@/features/campaign-dashboard/CampaignDashboardPage';
+import { AnalyticsDashboardPage } from '@/features/analytics-dashboard/AnalyticsDashboardPage';
 import { Header } from '@/components/layout/Header';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
 						<Route path="/" element={<HomePage />} />
 						<Route path="/dynamic-filter" element={<DynamicFilterPage />} />
 						<Route path="/campaign-dashboard" element={<CampaignDashboardPage />} />
+						<Route path="/analytics-dashboard" element={<AnalyticsDashboardPage />} />
 						<Route path="*" element={<Navigate to="/" replace />} />
 					</Routes>
 				</div>
