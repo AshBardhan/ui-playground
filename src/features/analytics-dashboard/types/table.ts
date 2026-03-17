@@ -5,7 +5,7 @@ export interface ColumnDefinition<T = any> {
 	label: string;
 	sortable?: boolean;
 	width?: string;
-	align?: 'left' | 'center' | 'right';
+	align?: 'left' | 'right';
 	render?: (value: any, row: T) => React.ReactNode;
 	sortValue?: (row: T) => string | number;
 }

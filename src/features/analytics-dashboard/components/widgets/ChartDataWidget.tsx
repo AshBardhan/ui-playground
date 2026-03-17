@@ -65,7 +65,7 @@ export const ChartDataWidget = ({ endpoint, refreshKey = 0, className }: ChartDa
 					<Text variant="h4" className="mb-4">
 						{data.title}
 					</Text>
-					<div className="w-full">{renderChart()}</div>
+					{renderChart()}
 				</>
 			)}
 		</Card>

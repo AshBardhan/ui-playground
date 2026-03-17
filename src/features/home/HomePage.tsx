@@ -34,7 +34,7 @@ export const HomePage = () => {
 						<Text variant="h2" className="mb-2">
 							{page.title}
 						</Text>
-						<Text>{page.description}</Text>
+						<Text variant="p">{page.description}</Text>
 					</Card>
 				))}
 			</div>

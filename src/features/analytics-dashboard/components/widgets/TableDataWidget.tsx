@@ -142,8 +142,10 @@ export const TableDataWidget = <T extends Record<string, any>>({
 				<>
 					<div className="p-6 border-b border-gray-200">
 						<div className="flex items-center justify-between mb-4">
-							<h3 className="text-lg font-semibold text-gray-900">{data.title}</h3>
-							<span className="text-sm text-gray-500">{sortedRows.length} items</span>
+							<Text variant="h3" className="text-lg font-semibold text-gray-900">
+								{data.title}
+							</Text>
+							<Text className="text-sm text-gray-500">{sortedRows.length} items</Text>
 						</div>
 
 						{data.searchable && (
@@ -165,16 +167,19 @@ export const TableDataWidget = <T extends Record<string, any>>({
 											key={column.key}
 											className={clsx(
 												'px-6 py-3 text-xs font-medium text-gray-700 uppercase tracking-wider',
-												column.align === 'right' && 'text-right',
-												column.align === 'center' && 'text-center',
-												column.align === 'left' && 'text-left',
-												!column.align && 'text-left',
 												column.sortable && 'cursor-pointer hover:bg-gray-100 select-none'
 											)}
 											style={{ width: column.width }}
 											onClick={() => column.sortable && handleSort(column.key)}
 										>
-											<div className="flex items-center gap-2 justify-between">
+											<div
+												className={clsx(
+													'flex items-center gap-2',
+													column.align === 'right' && 'justify-end',
+													column.align === 'left' && 'justify-start',
+													!column.align && 'justify-start'
+												)}
+											>
 												<span>{column.label}</span>
 												{column.sortable && getSortIcon(column.key)}
 											</div>
@@ -198,7 +203,6 @@ export const TableDataWidget = <T extends Record<string, any>>({
 													className={clsx(
 														'px-6 py-4 text-sm text-gray-900',
 														column.align === 'right' && 'text-right',
-														column.align === 'center' && 'text-center',
 														column.align === 'left' && 'text-left',
 														!column.align && 'text-left'
 													)}

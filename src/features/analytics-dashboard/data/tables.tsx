@@ -178,7 +178,7 @@ const columns: ColumnDefinition<ProductPerformance>[] = [
 		key: 'status',
 		label: 'Status',
 		sortable: true,
-		align: 'center',
+		align: 'right',
 		width: '13%',
 		render: (value: string) => {
 			const statusColors = {

@@ -35,29 +35,11 @@ export const handlers = [
 		return HttpResponse.json(mockCampaigns);
 	}),
 
-	// Individual metric widget endpoints
-	http.get('*/api/analytics/metrics/metric-1', async () => {
-		console.log('[MSW] /api/analytics/metrics/metric-1 intercepted');
-		await delay(300); // Fast metrics
-		return HttpResponse.json(metricsData[0]);
-	}),
-
-	http.get('*/api/analytics/metrics/metric-2', async () => {
-		console.log('[MSW] /api/analytics/metrics/metric-2 intercepted');
-		await delay(400);
-		return HttpResponse.json(metricsData[1]);
-	}),
-
-	http.get('*/api/analytics/metrics/metric-3', async () => {
-		console.log('[MSW] /api/analytics/metrics/metric-3 intercepted');
-		await delay(350);
-		return HttpResponse.json(metricsData[2]);
-	}),
-
-	http.get('*/api/analytics/metrics/metric-4', async () => {
-		console.log('[MSW] /api/analytics/metrics/metric-4 intercepted');
-		await delay(450);
-		return HttpResponse.json(metricsData[3]);
+	// All metrics in one call
+	http.get('*/api/analytics/metrics', async () => {
+		console.log('[MSW] /api/analytics/metrics intercepted');
+		await delay(500); // Reasonable delay for multiple metrics
+		return HttpResponse.json(metricsData.slice(0, 4));
 	}),
 
 	// Individual chart widget endpoints
