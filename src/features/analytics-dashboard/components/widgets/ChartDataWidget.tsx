@@ -1,4 +1,4 @@
-import { ChartData, TimeSeriesDataPoint, ChartDataPoint } from '../../types/chart';
+import { ChartData, LineChartData, BarChartData, PieChartData, AreaChartData } from '../../types/chart';
 import { LineChart } from '../charts/LineChart';
 import { BarChart } from '../charts/BarChart';
 import { PieChart } from '../charts/PieChart';
@@ -23,13 +23,13 @@ export const ChartDataWidget = ({ endpoint, refreshKey = 0, className }: ChartDa
 		if (!data) return null;
 		switch (data.type) {
 			case 'line':
-				return <LineChart data={data.data as TimeSeriesDataPoint[]} color={data.color} />;
+				return <LineChart data={data as LineChartData} />;
 			case 'bar':
-				return <BarChart data={data.data as ChartDataPoint[]} color={data.color} />;
+				return <BarChart data={data as BarChartData} />;
 			case 'pie':
-				return <PieChart data={data.data as ChartDataPoint[]} colors={data.colors} />;
+				return <PieChart data={data as PieChartData} />;
 			case 'area':
-				return <AreaChart data={data.data as TimeSeriesDataPoint[]} color={data.color} />;
+				return <AreaChart data={data as AreaChartData} />;
 			default:
 				return <div className="text-gray-500">Unsupported chart type</div>;
 		}

@@ -6,7 +6,7 @@ export const revenueOverTimeData: LineChartData = {
 	title: 'Revenue Trend (Last 30 Days)',
 	type: 'line',
 	color: '#3b82f6',
-	data: [
+	points: [
 		{ date: '2026-02-15', value: 24500 },
 		{ date: '2026-02-16', value: 26800 },
 		{ date: '2026-02-17', value: 23900 },
@@ -46,7 +46,7 @@ export const userActivityData: AreaChartData = {
 	title: 'User Activity by Hour (Today)',
 	type: 'area',
 	color: '#8b5cf6',
-	data: [
+	points: [
 		{ date: '00:00', value: 245 },
 		{ date: '01:00', value: 189 },
 		{ date: '02:00', value: 132 },
@@ -79,16 +79,15 @@ export const salesByCategoryData: BarChartData = {
 	id: 'sales-by-category',
 	title: 'Sales by Category',
 	type: 'bar',
-	color: '#10b981',
-	data: [
-		{ label: 'Electronics', value: 125600 },
-		{ label: 'Clothing', value: 98400 },
-		{ label: 'Home & Garden', value: 87200 },
-		{ label: 'Sports', value: 76800 },
-		{ label: 'Books', value: 54300 },
-		{ label: 'Toys', value: 43900 },
-		{ label: 'Beauty', value: 38700 },
-		{ label: 'Automotive', value: 29500 },
+	points: [
+		{ label: 'Electronics', value: 87200, color: '#3b82f6' },
+		{ label: 'Clothing', value: 125600, color: '#8b5cf6' },
+		{ label: 'Home & Garden', value: 43900, color: '#10b981' },
+		{ label: 'Sports', value: 98400, color: '#f59e0b' },
+		{ label: 'Books', value: 76800, color: '#ef4444' },
+		{ label: 'Toys', value: 29500, color: '#ec4899' },
+		{ label: 'Beauty', value: 54300, color: '#06b6d4' },
+		{ label: 'Automotive', value: 38700, color: '#6b7280' },
 	],
 };
 
@@ -97,14 +96,13 @@ export const trafficSourcesData: PieChartData = {
 	id: 'traffic-sources',
 	title: 'Traffic Sources',
 	type: 'pie',
-	colors: ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#6b7280'],
-	data: [
-		{ label: 'Organic Search', value: 45.2 },
-		{ label: 'Direct', value: 23.8 },
-		{ label: 'Social Media', value: 15.6 },
-		{ label: 'Paid Ads', value: 8.9 },
-		{ label: 'Referral', value: 4.3 },
-		{ label: 'Email', value: 2.2 },
+	points: [
+		{ label: 'Organic Search', value: 45.2, color: '#ef4444' },
+		{ label: 'Direct', value: 23.8, color: '#eab308' },
+		{ label: 'Social Media', value: 15.6, color: '#10b981' },
+		{ label: 'Paid Ads', value: 8.9, color: '#06b6d4' },
+		{ label: 'Referral', value: 4.3, color: '#3b82f6' },
+		{ label: 'Email', value: 2.2, color: '#d946ef' },
 	],
 };
 
