@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 
 const pages = [
 	{ title: 'Home', path: '/' },
-	{ title: 'Dashboard', path: '/dashboard' },
+	{ title: 'Campaign Dashboard', path: '/campaign-dashboard' },
+	{ title: 'Analytics Dashboard', path: '/analytics-dashboard' },
 	{ title: 'Dynamic Filter', path: '/dynamic-filter' },
 ];
 
