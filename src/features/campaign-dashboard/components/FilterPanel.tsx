@@ -1,7 +1,7 @@
 import { CampaignStatus, CampaignFilters } from '../types/campaign';
 import { SearchBox } from '@/components/ui/SearchBox';
 import { FilterGroup } from '@/components/ui/FilterGroup';
-import { Button } from '@headlessui/react';
+import { Button } from '@/components/ui/Button';
 import clsx from 'clsx';
 
 interface FilterPanelProps {
@@ -39,7 +39,7 @@ export const FilterPanel = ({ filters, onFiltersChange, className }: FilterPanel
 			<div className="flex items-center justify-between mb-4">
 				<h2 className="text-lg font-semibold text-gray-900">Filters</h2>
 				{hasActiveFilters && (
-					<Button onClick={handleClearFilters} className="text-sm text-blue-600 hover:text-blue-800">
+					<Button type="reset" onClick={handleClearFilters} theme="secondary">
 						Clear all
 					</Button>
 				)}

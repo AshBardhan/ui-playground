@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { AnalyticsDashboardLayout } from './AnalyticsDashboardLayout';
 import { Text } from '@/components/ui/Text';
+import { Button } from '@/components/ui/Button';
 import { RefreshCw } from 'lucide-react';
-import { Button } from '@headlessui/react';
 import { DASHBOARD_WIDGETS } from './constants/dashboard';
 
 export const AnalyticsDashboardPage = () => {
@@ -23,10 +23,7 @@ export const AnalyticsDashboardPage = () => {
 						Real-time analytics and insights
 					</Text>
 				</div>
-				<Button
-					onClick={handleRefresh}
-					className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-				>
+				<Button onClick={handleRefresh} theme="secondary">
 					<RefreshCw className="h-4 w-4" />
 					Refresh
 				</Button>

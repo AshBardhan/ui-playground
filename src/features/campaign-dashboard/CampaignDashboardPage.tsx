@@ -4,6 +4,7 @@ import { CampaignDashboardLayout } from './components/CampaignDashboardLayout';
 import { CampaignList } from './components/CampaignList';
 import { FilterPanel } from './components/FilterPanel';
 import { Text } from '@/components/ui/Text';
+import { Button } from '@/components/ui/Button';
 
 export const CampaignDashboardPage = () => {
 	const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -72,12 +73,9 @@ export const CampaignDashboardPage = () => {
 				<div className="text-center">
 					<div className="text-red-600 text-lg mb-2">Error loading campaigns</div>
 					<div className="text-gray-600">{error}</div>
-					<button
-						onClick={() => window.location.reload()}
-						className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-					>
+					<Button onClick={() => window.location.reload()} className="mt-4">
 						Retry
-					</button>
+					</Button>
 				</div>
 			</div>
 		);

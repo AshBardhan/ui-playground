@@ -1,6 +1,7 @@
 import { FilterFieldSchema } from '../types/filter-schema';
 import { FilterCondition, LogicalOperator } from '../types/filter-condition';
-import { Button, Input } from '@headlessui/react';
+import { Input } from '@headlessui/react';
+import { Button } from '@/components/ui/Button';
 import { DropdownList } from '@/components/ui/DropdownList';
 
 interface DynamicFilterBoxProps {
@@ -131,11 +132,7 @@ export const DynamicFilterBox = ({
 
 									{/* Remove Condition */}
 									{conditions.length > 1 && (
-										<Button
-											type="button"
-											onClick={() => onRemoveCondition?.(index)}
-											className="text-red-500 hover:text-red-700"
-										>
+										<Button onClick={() => onRemoveCondition?.(index)} theme="danger" size="sm">
 											✕
 										</Button>
 									)}
@@ -157,11 +154,7 @@ export const DynamicFilterBox = ({
 			})}
 
 			{!isReadOnly && (
-				<Button
-					type="button"
-					onClick={onAddCondition}
-					className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-				>
+				<Button onClick={onAddCondition} theme="primary">
 					Add Condition
 				</Button>
 			)}

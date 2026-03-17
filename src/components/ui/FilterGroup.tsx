@@ -1,4 +1,4 @@
-import { Button } from '@headlessui/react';
+import { Button } from './Button';
 import clsx from 'clsx';
 
 interface FilterGroupProps<T extends string> {
@@ -39,12 +39,11 @@ export const FilterGroup = <T extends string>({
 		<div className={clsx('space-y-3', className)}>
 			<div className="flex items-center justify-between">
 				<h3 className="text-sm font-medium text-gray-900">{title}</h3>
-				<div className="flex gap-1">
-					<Button onClick={handleSelectAll} className="text-xs text-blue-600 hover:text-blue-800">
+				<div className="flex gap-1 items-center">
+					<Button onClick={handleSelectAll} theme="ghost" size="sm">
 						All
 					</Button>
-					<span className="text-gray-300">|</span>
-					<Button onClick={handleClearAll} className="text-xs text-gray-600 hover:text-gray-800">
+					<Button type="reset" onClick={handleClearAll} theme="ghost" size="sm" className="text-gray-600">
 						Clear
 					</Button>
 				</div>
