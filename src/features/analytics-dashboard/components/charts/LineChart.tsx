@@ -4,11 +4,10 @@ import { LineChartData } from '../../types/chart';
 
 interface LineChartProps {
 	data: LineChartData;
-	width?: number;
 	height?: number;
 }
 
-export const LineChart = ({ data, width = 600, height = 300 }: LineChartProps) => {
+export const LineChart = ({ data, height = 300 }: LineChartProps) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 

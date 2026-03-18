@@ -93,44 +93,38 @@ export const MetricDataWidget = ({ endpoint, refreshKey = 0, className }: Metric
 	});
 
 	return (
-		<div className={className}>
+		<Card className={className}>
 			{loading && (
-				<Card>
-					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-						{[1, 2, 3, 4].map((i) => (
-							<div key={i} className="space-y-3">
-								<Skeleton height={16} />
-								<Skeleton height={36} />
-								<Skeleton height={12} />
-								<div className="pt-2">
-									<Skeleton height={20} />
-								</div>
+				<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+					{[1, 2, 3, 4].map((i) => (
+						<div key={i} className="space-y-3">
+							<Skeleton height={16} />
+							<Skeleton height={36} />
+							<Skeleton height={12} />
+							<div className="pt-2">
+								<Skeleton height={20} />
 							</div>
-						))}
-					</div>
-				</Card>
+						</div>
+					))}
+				</div>
 			)}
 
 			{error && (
-				<Card>
-					<div className="flex items-center gap-2 text-red-600">
-						<AlertCircle className="h-5 w-5" />
-						<Text variant="p" className="text-sm">
-							{error.message}
-						</Text>
-					</div>
-				</Card>
+				<div className="flex items-center gap-2 text-red-600">
+					<AlertCircle className="h-5 w-5" />
+					<Text variant="p" className="text-sm">
+						{error.message}
+					</Text>
+				</div>
 			)}
 
-			{data && (
-				<Card>
-					<div className="grid grid-cols-2 xl:grid-cols-4 gap-6">
-						{data.map((metric) => (
-							<MetricItem key={metric.id} data={metric} />
-						))}
-					</div>
-				</Card>
+			{!loading && !error && data && (
+				<div className="grid grid-cols-2 xl:grid-cols-4 gap-6">
+					{data.map((metric) => (
+						<MetricItem key={metric.id} data={metric} />
+					))}
+				</div>
 			)}
-		</div>
+		</Card>
 	);
 };

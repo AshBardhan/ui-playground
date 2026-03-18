@@ -3,7 +3,7 @@ import { LineChartData, BarChartData, PieChartData, AreaChartData } from '../typ
 // Revenue over time (Line Chart)
 export const revenueOverTimeData: LineChartData = {
 	id: 'revenue-over-time',
-	title: 'Revenue Trend (Last 30 Days)',
+	title: 'Revenue Trend',
 	type: 'line',
 	color: '#3b82f6',
 	points: [
@@ -43,7 +43,7 @@ export const revenueOverTimeData: LineChartData = {
 // User activity by hour (Area Chart)
 export const userActivityData: AreaChartData = {
 	id: 'user-activity',
-	title: 'User Activity by Hour (Today)',
+	title: 'User Activity by Hour',
 	type: 'area',
 	color: '#8b5cf6',
 	points: [
@@ -97,12 +97,12 @@ export const trafficSourcesData: PieChartData = {
 	title: 'Traffic Sources',
 	type: 'pie',
 	points: [
-		{ label: 'Organic Search', value: 45.2, color: '#ef4444' },
-		{ label: 'Direct', value: 23.8, color: '#eab308' },
 		{ label: 'Social Media', value: 15.6, color: '#10b981' },
-		{ label: 'Paid Ads', value: 8.9, color: '#06b6d4' },
-		{ label: 'Referral', value: 4.3, color: '#3b82f6' },
+		{ label: 'Organic Search', value: 45.2, color: '#ef4444' },
 		{ label: 'Email', value: 2.2, color: '#d946ef' },
+		{ label: 'Direct', value: 23.8, color: '#eab308' },
+		{ label: 'Referral', value: 4.3, color: '#3b82f6' },
+		{ label: 'Paid Ads', value: 8.9, color: '#06b6d4' },
 	],
 };
 

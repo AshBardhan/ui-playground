@@ -4,13 +4,12 @@ import { PieChartData, ChartDataPoint } from '../../types/chart';
 
 interface PieChartProps {
 	data: PieChartData;
-	width?: number;
 	height?: number;
 }
 
 const defaultColors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#6b7280'];
 
-export const PieChart = ({ data, width = 400, height = 300 }: PieChartProps) => {
+export const PieChart = ({ data, height = 300 }: PieChartProps) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 

@@ -4,11 +4,10 @@ import { BarChartData } from '../../types/chart';
 
 interface BarChartProps {
 	data: BarChartData;
-	width?: number;
 	height?: number;
 }
 
-export const BarChart = ({ data, width = 600, height = 300 }: BarChartProps) => {
+export const BarChart = ({ data, height = 300 }: BarChartProps) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 

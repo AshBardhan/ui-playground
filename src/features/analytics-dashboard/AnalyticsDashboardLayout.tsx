@@ -31,13 +31,20 @@ export const AnalyticsDashboardLayout = ({ widgets, refreshKey = 0, className }:
 			case 'chart':
 				return (
 					<div key={widget.id} className={widgetClassName}>
-						<ChartDataWidget endpoint={widget.endpoint} refreshKey={refreshKey} />
+						<ChartDataWidget
+							title={widget.title}
+							endpoint={widget.endpoint}
+							refreshKey={refreshKey}
+							sortOptions={widget.sortOptions}
+							rangeOptions={widget.rangeOptions}
+							periodOptions={widget.periodOptions}
+						/>
 					</div>
 				);
 			case 'table':
 				return (
 					<div key={widget.id} className={widgetClassName}>
-						<TableDataWidget endpoint={widget.endpoint} refreshKey={refreshKey} />
+						<TableDataWidget title={widget.title} endpoint={widget.endpoint} refreshKey={refreshKey} />
 					</div>
 				);
 			default:

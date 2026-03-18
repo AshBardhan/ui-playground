@@ -10,12 +10,14 @@ import { useFetch } from '@/hooks/useFetch';
 
 interface TableDataWidgetProps<T = any> {
 	endpoint: string;
+	title: string;
 	refreshKey?: number;
 	className?: string;
 }
 
 export const TableDataWidget = <T extends Record<string, any>>({
 	endpoint,
+	title,
 	refreshKey = 0,
 	className,
 }: TableDataWidgetProps<T>) => {
@@ -138,12 +140,12 @@ export const TableDataWidget = <T extends Record<string, any>>({
 				</div>
 			)}
 
-			{data && (
+			{!loading && !error && data && (
 				<>
 					<div className="p-6 border-b border-gray-200">
 						<div className="flex items-center justify-between mb-4">
 							<Text variant="h3" className="text-lg font-semibold text-gray-900">
-								{data.title}
+								{title}
 							</Text>
 							<Text className="text-sm text-gray-500">{sortedRows.length} items</Text>
 						</div>

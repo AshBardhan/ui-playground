@@ -4,11 +4,10 @@ import { AreaChartData } from '../../types/chart';
 
 interface AreaChartProps {
 	data: AreaChartData;
-	width?: number;
 	height?: number;
 }
 
-export const AreaChart = ({ data, width = 600, height = 300 }: AreaChartProps) => {
+export const AreaChart = ({ data, height = 300 }: AreaChartProps) => {
 	const svgRef = useRef<SVGSVGElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);
 

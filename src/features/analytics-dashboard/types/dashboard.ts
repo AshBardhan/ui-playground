@@ -4,7 +4,6 @@ export interface BaseWidget {
 	id: string;
 	type: WidgetType;
 	endpoint: string;
-	gridArea?: string; // for CSS Grid positioning
 	size?: 'small' | 'medium' | 'large' | 'full';
 }
 
@@ -13,10 +12,17 @@ export interface MetricWidget extends BaseWidget {
 }
 
 export interface ChartWidget extends BaseWidget {
+	title: string;
 	type: 'chart';
+
+	// Optional control options for interactive charts
+	sortOptions?: string[];
+	rangeOptions?: string[];
+	periodOptions?: string[];
 }
 
 export interface TableWidget extends BaseWidget {
+	title: string;
 	type: 'table';
 }
 
