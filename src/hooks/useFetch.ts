@@ -1,10 +1,24 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
+
+/**
+ * Global cache: URL → response data
+ */
+const cacheMap = new Map<string, any>();
+
+/**
+ * Track in-flight requests to avoid duplicate API calls
+ */
+const inflightRequests = new Map<string, Promise<any>>();
 
 interface UseFetchOptions<T> {
 	url: string | null;
 	method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 	body?: any;
 	headers?: HeadersInit;
+
+	// Optional toggle for caching
+	cache?: boolean;
+
 	onSuccess?: (data: T) => void;
 	onError?: (error: Error) => void;
 }
@@ -16,30 +30,73 @@ interface UseFetchReturn<T> {
 }
 
 export const useFetch = <T>(options: UseFetchOptions<T>): UseFetchReturn<T> => {
-	const { url, method = 'GET', body, headers, onSuccess, onError } = options;
+	const { url, method = 'GET', body, headers, cache = false, onSuccess, onError } = options;
 
 	const [data, setData] = useState<T | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<Error | null>(null);
 
 	useEffect(() => {
-		const abortController = new AbortController();
-		const signal = abortController.signal;
+		if (!url) {
+			setData(null);
+			setLoading(false);
+			setError(null);
+			return;
+		}
+
+		let isMounted = true;
+		const controller = new AbortController();
+		const signal = controller.signal;
 
 		const fetchData = async () => {
-			if (!url) {
+			/**
+			 * ✅ STEP 1: Cache lookup
+			 */
+			if (cache && cacheMap.has(url)) {
+				const cached = cacheMap.get(url);
+
+				if (!isMounted) return;
+
+				setData(cached);
 				setLoading(false);
-				setData(null);
 				setError(null);
+				onSuccess?.(cached);
 				return;
 			}
 
-			// Set loading first, then clear previous data and error
+			/**
+			 * ✅ STEP 2: Loading state (only if no cached data)
+			 */
 			setLoading(true);
-			setData(null);
 			setError(null);
 
 			try {
+				/**
+				 * ✅ STEP 3: Deduplication - wait for in-flight request
+				 */
+				if (inflightRequests.has(url)) {
+					try {
+						const result = await inflightRequests.get(url)!;
+
+						if (!isMounted) return;
+
+						setData(result);
+						setLoading(false);
+						setError(null);
+						onSuccess?.(result);
+						return;
+					} catch (err) {
+						// If the in-flight request was aborted or failed, continue to make our own request
+						if (err instanceof Error && err.name === 'AbortError') {
+							// Previous request was aborted, make our own request
+							inflightRequests.delete(url);
+						} else {
+							// Other error - propagate it
+							throw err;
+						}
+					}
+				}
+
 				const requestOptions: RequestInit = {
 					method,
 					headers: {
@@ -53,33 +110,49 @@ export const useFetch = <T>(options: UseFetchOptions<T>): UseFetchReturn<T> => {
 					requestOptions.body = JSON.stringify(body);
 				}
 
-				const response = await fetch(url, requestOptions);
+				const requestPromise = fetch(url, requestOptions)
+					.then(async (res) => {
+						if (!res.ok) {
+							throw new Error(`HTTP error! status: ${res.status}`);
+						}
 
-				if (!response.ok) {
-					throw new Error(`HTTP error! status: ${response.status}`);
-				}
+						const contentType = res.headers.get('content-type');
+						if (!contentType || !contentType.includes('application/json')) {
+							throw new Error('Response is not JSON');
+						}
 
-				// Check if response is JSON
-				const contentType = response.headers.get('content-type');
-				if (!contentType || !contentType.includes('application/json')) {
-					throw new Error('Response is not JSON');
-				}
+						return res.json();
+					})
+					.then((result) => {
+						/**
+						 * ✅ Store in cache
+						 */
+						if (cache) {
+							cacheMap.set(url, result);
+						}
+						return result;
+					})
+					.finally(() => {
+						inflightRequests.delete(url);
+					});
 
-				const responseData = await response.json();
+				inflightRequests.set(url, requestPromise);
 
-				// Set data and clear error, then set loading to false
-				setData(responseData);
-				setError(null);
+				const result = await requestPromise;
+
+				if (!isMounted) return;
+
+				setData(result);
 				setLoading(false);
-				onSuccess?.(responseData);
+				setError(null);
+				onSuccess?.(result);
 			} catch (err) {
+				if (!isMounted) return;
+
 				if (err instanceof Error && err.name !== 'AbortError') {
-					const errorObj = err instanceof Error ? err : new Error('An error occurred');
-					// Set error and clear data, then set loading to false
-					setError(errorObj);
-					setData(null);
+					setError(err);
 					setLoading(false);
-					onError?.(errorObj);
+					onError?.(err);
 				}
 			}
 		};
@@ -87,9 +160,10 @@ export const useFetch = <T>(options: UseFetchOptions<T>): UseFetchReturn<T> => {
 		fetchData();
 
 		return () => {
-			abortController.abort();
+			isMounted = false;
+			controller.abort();
 		};
-	}, [url, method, body, headers, onSuccess, onError]);
+	}, [url, method, body, headers, cache]);
 
 	return { data, loading, error };
 };

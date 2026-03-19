@@ -90,6 +90,7 @@ const MetricItem = ({ data }: MetricItemProps) => {
 export const MetricDataWidget = ({ endpoint, refreshKey = 0, className }: MetricDataWidgetProps) => {
 	const { data, loading, error } = useFetch<MetricWidgetData[]>({
 		url: `${endpoint}?v=${refreshKey}`,
+		cache: true,
 	});
 
 	return (

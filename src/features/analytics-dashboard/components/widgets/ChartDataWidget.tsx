@@ -65,6 +65,7 @@ export const ChartDataWidget = ({
 	 */
 	const { data, loading, error } = useFetch<ChartData>({
 		url: apiUrl,
+		cache: true,
 	});
 
 	/**

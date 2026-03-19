@@ -23,6 +23,7 @@ export const TableDataWidget = <T extends Record<string, any>>({
 }: TableDataWidgetProps<T>) => {
 	const { data, loading, error } = useFetch<TableData<T>>({
 		url: `${endpoint}?v=${refreshKey}`,
+		cache: true,
 	});
 	const [searchQuery, setSearchQuery] = useState('');
 	const [sortConfig, setSortConfig] = useState<SortConfig>(data?.defaultSort || { key: '', direction: null });
