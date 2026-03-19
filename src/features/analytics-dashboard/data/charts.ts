@@ -106,4 +106,106 @@ export const trafficSourcesData: PieChartData = {
 	],
 };
 
-export const allChartsData = [revenueOverTimeData, userActivityData, salesByCategoryData, trafficSourcesData];
+// V2 Versions with varied data
+
+export const revenueOverTimeDataV2: LineChartData = {
+	id: 'revenue-over-time',
+	title: 'Revenue Trend',
+	type: 'line',
+	color: '#3b82f6',
+	points: [
+		{ date: '2026-02-15', value: 28700 },
+		{ date: '2026-02-16', value: 31200 },
+		{ date: '2026-02-17', value: 27800 },
+		{ date: '2026-02-18', value: 33100 },
+		{ date: '2026-02-19', value: 32400 },
+		{ date: '2026-02-20', value: 42800 },
+		{ date: '2026-02-21', value: 30200 },
+		{ date: '2026-02-22', value: 31900 },
+		{ date: '2026-02-23', value: 35800 },
+		{ date: '2026-02-24', value: 21500 },
+		{ date: '2026-02-25', value: 37300 },
+		{ date: '2026-02-26', value: 35200 },
+		{ date: '2026-02-27', value: 38100 },
+		{ date: '2026-02-28', value: 36300 },
+		{ date: '2026-03-01', value: 48900 },
+		{ date: '2026-03-02', value: 37600 },
+		{ date: '2026-03-03', value: 40900 },
+		{ date: '2026-03-04', value: 39000 },
+		{ date: '2026-03-05', value: 41600 },
+		{ date: '2026-03-06', value: 29200 },
+		{ date: '2026-03-07', value: 42900 },
+		{ date: '2026-03-08', value: 41200 },
+		{ date: '2026-03-09', value: 51600 },
+		{ date: '2026-03-10', value: 42100 },
+		{ date: '2026-03-11', value: 45300 },
+		{ date: '2026-03-12', value: 43700 },
+		{ date: '2026-03-13', value: 46800 },
+		{ date: '2026-03-14', value: 44800 },
+		{ date: '2026-03-15', value: 47600 },
+		{ date: '2026-03-16', value: 45700 },
+	],
+};
+
+export const userActivityDataV2: AreaChartData = {
+	id: 'user-activity',
+	title: 'User Activity by Hour',
+	type: 'area',
+	color: '#8b5cf6',
+	points: [
+		{ date: '00:00', value: 412 },
+		{ date: '01:00', value: 389 },
+		{ date: '02:00', value: 298 },
+		{ date: '03:00', value: 234 },
+		{ date: '04:00', value: 267 },
+		{ date: '05:00', value: 356 },
+		{ date: '06:00', value: 489 },
+		{ date: '07:00', value: 612 },
+		{ date: '08:00', value: 534 },
+		{ date: '09:00', value: 467 },
+		{ date: '10:00', value: 523 },
+		{ date: '11:00', value: 678 },
+		{ date: '12:00', value: 892 },
+		{ date: '13:00', value: 956 },
+		{ date: '14:00', value: 723 },
+		{ date: '15:00', value: 601 },
+		{ date: '16:00', value: 534 },
+		{ date: '17:00', value: 612 },
+		{ date: '18:00', value: 789 },
+		{ date: '19:00', value: 923 },
+		{ date: '20:00', value: 867 },
+		{ date: '21:00', value: 734 },
+		{ date: '22:00', value: 623 },
+		{ date: '23:00', value: 501 },
+	],
+};
+
+export const salesByCategoryDataV2: BarChartData = {
+	id: 'sales-by-category',
+	title: 'Sales by Category',
+	type: 'bar',
+	points: [
+		{ label: 'Beauty', value: 61800, color: '#06b6d4' },
+		{ label: 'Sports', value: 87600, color: '#f59e0b' },
+		{ label: 'Electronics', value: 102400, color: '#3b82f6' },
+		{ label: 'Toys', value: 38900, color: '#ec4899' },
+		{ label: 'Home & Garden', value: 51300, color: '#10b981' },
+		{ label: 'Clothing', value: 98700, color: '#8b5cf6' },
+		{ label: 'Automotive', value: 45600, color: '#6b7280' },
+		{ label: 'Books', value: 64200, color: '#ef4444' },
+	],
+};
+
+export const trafficSourcesDataV2: PieChartData = {
+	id: 'traffic-sources',
+	title: 'Traffic Sources',
+	type: 'pie',
+	points: [
+		{ label: 'Paid Ads', value: 7.2, color: '#06b6d4' },
+		{ label: 'Referral', value: 5.1, color: '#3b82f6' },
+		{ label: 'Organic Search', value: 38.7, color: '#ef4444' },
+		{ label: 'Social Media', value: 18.9, color: '#10b981' },
+		{ label: 'Direct', value: 28.4, color: '#eab308' },
+		{ label: 'Email', value: 1.7, color: '#d946ef' },
+	],
+};
