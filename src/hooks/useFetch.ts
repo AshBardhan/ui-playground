@@ -3,24 +3,19 @@ import { useEffect, useState } from 'react';
 /**
  * Global cache: URL → response data
  */
-const cacheMap = new Map<string, any>();
+const cacheMap = new Map<string, unknown>();
 
 /**
  * Track in-flight requests to avoid duplicate API calls
  */
-const inflightRequests = new Map<string, Promise<any>>();
+const inflightRequests = new Map<string, Promise<unknown>>();
 
-interface UseFetchOptions<T> {
+interface UseFetchOptions {
 	url: string | null;
 	method?: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-	body?: any;
+	body?: unknown;
 	headers?: HeadersInit;
-
-	// Optional toggle for caching
 	cache?: boolean;
-
-	onSuccess?: (data: T) => void;
-	onError?: (error: Error) => void;
 }
 
 interface UseFetchReturn<T> {
@@ -29,7 +24,12 @@ interface UseFetchReturn<T> {
 	error: Error | null;
 }
 
-export const useFetch = <T>(options: UseFetchOptions<T>): UseFetchReturn<T> => {
+export const useFetch = <T = unknown>(
+	options: UseFetchOptions & {
+		onSuccess?: (data: T) => void;
+		onError?: (error: Error) => void;
+	}
+): UseFetchReturn<T> => {
 	const { url, method = 'GET', body, headers, cache = false, onSuccess, onError } = options;
 
 	const [data, setData] = useState<T | null>(null);
@@ -49,11 +49,8 @@ export const useFetch = <T>(options: UseFetchOptions<T>): UseFetchReturn<T> => {
 		const signal = controller.signal;
 
 		const fetchData = async () => {
-			/**
-			 * ✅ STEP 1: Cache lookup
-			 */
 			if (cache && cacheMap.has(url)) {
-				const cached = cacheMap.get(url);
+				const cached = cacheMap.get(url) as T;
 
 				if (!isMounted) return;
 
@@ -64,34 +61,26 @@ export const useFetch = <T>(options: UseFetchOptions<T>): UseFetchReturn<T> => {
 				return;
 			}
 
-			/**
-			 * ✅ STEP 2: Loading state (only if no cached data)
-			 */
 			setLoading(true);
 			setError(null);
 
 			try {
-				/**
-				 * ✅ STEP 3: Deduplication - wait for in-flight request
-				 */
 				if (inflightRequests.has(url)) {
 					try {
-						const result = await inflightRequests.get(url)!;
+						const result = (await inflightRequests.get(url)!) as T;
 
 						if (!isMounted) return;
 
 						setData(result);
 						setLoading(false);
-						setError(null);
 						onSuccess?.(result);
 						return;
 					} catch (err) {
 						// If the in-flight request was aborted or failed, continue to make our own request
 						if (err instanceof Error && err.name === 'AbortError') {
-							// Previous request was aborted, make our own request
 							inflightRequests.delete(url);
 						} else {
-							// Other error - propagate it
+							// Re-throw non-abort errors to be handled by outer catch
 							throw err;
 						}
 					}
@@ -124,9 +113,6 @@ export const useFetch = <T>(options: UseFetchOptions<T>): UseFetchReturn<T> => {
 						return res.json();
 					})
 					.then((result) => {
-						/**
-						 * ✅ Store in cache
-						 */
 						if (cache) {
 							cacheMap.set(url, result);
 						}
@@ -138,7 +124,7 @@ export const useFetch = <T>(options: UseFetchOptions<T>): UseFetchReturn<T> => {
 
 				inflightRequests.set(url, requestPromise);
 
-				const result = await requestPromise;
+				const result = (await requestPromise) as T;
 
 				if (!isMounted) return;
 
@@ -149,10 +135,15 @@ export const useFetch = <T>(options: UseFetchOptions<T>): UseFetchReturn<T> => {
 			} catch (err) {
 				if (!isMounted) return;
 
-				if (err instanceof Error && err.name !== 'AbortError') {
-					setError(err);
+				if (err instanceof Error) {
+					// Always set loading to false, even for AbortError
 					setLoading(false);
-					onError?.(err);
+
+					// Only set error state for non-abort errors
+					if (err.name !== 'AbortError') {
+						setError(err);
+						onError?.(err);
+					}
 				}
 			}
 		};
@@ -163,7 +154,8 @@ export const useFetch = <T>(options: UseFetchOptions<T>): UseFetchReturn<T> => {
 			isMounted = false;
 			controller.abort();
 		};
-	}, [url, method, body, headers, cache]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [url, method, JSON.stringify(body), JSON.stringify(headers), cache]);
 
 	return { data, loading, error };
 };

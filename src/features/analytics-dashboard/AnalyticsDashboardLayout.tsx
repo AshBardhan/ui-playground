@@ -2,6 +2,7 @@ import { DashboardWidget } from './types/dashboard';
 import { MetricDataWidget } from './components/widgets/MetricDataWidget';
 import { ChartDataWidget } from './components/widgets/ChartDataWidget';
 import { TableDataWidget } from './components/widgets/TableDataWidget';
+import { productPerformanceColumnRenderConfig } from './configs/productTableConfig';
 import clsx from 'clsx';
 
 interface AnalyticsDashboardLayoutProps {
@@ -44,7 +45,12 @@ export const AnalyticsDashboardLayout = ({ widgets, refreshKey = 0, className }:
 			case 'table':
 				return (
 					<div key={widget.id} className={widgetClassName}>
-						<TableDataWidget title={widget.title} endpoint={widget.endpoint} refreshKey={refreshKey} />
+						<TableDataWidget
+							title={widget.title}
+							endpoint={widget.endpoint}
+							renderConfig={productPerformanceColumnRenderConfig}
+							refreshKey={refreshKey}
+						/>
 					</div>
 				);
 			default:

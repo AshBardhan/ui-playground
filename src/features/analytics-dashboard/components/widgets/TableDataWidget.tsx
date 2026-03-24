@@ -1,77 +1,72 @@
-import { useState, useMemo } from 'react';
-import { TableData, SortConfig, SortDirection, ColumnDefinition } from '../../types/table';
+import { useState, useEffect } from 'react';
+import { PaginatedTableData, SortConfig, ColumnDefinition, ColumnRenderConfig } from '../../types/table';
+import { mergeColumnConfig } from '../../configs/productTableConfig';
 import { SearchBox } from '@/components/ui/SearchBox';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
-import { ChevronUp, ChevronDown, ChevronsUpDown, AlertCircle } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { ChevronUp, ChevronDown, ChevronsUpDown, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
 import { useFetch } from '@/hooks/useFetch';
+import { useDebounce } from '@/hooks/useDebounce';
 
-interface TableDataWidgetProps<T = any> {
+interface TableDataWidgetProps<T extends { id: string }> {
 	endpoint: string;
 	title: string;
+	renderConfig: ColumnRenderConfig<T>;
 	refreshKey?: number;
 	className?: string;
 }
 
-export const TableDataWidget = <T extends Record<string, any>>({
+/**
+ * Server-side paginated table with search, sort, and navigation.
+ * Server sends column configs + rows. Client provides render functions.
+ */
+export const TableDataWidget = <T extends { id: string }>({
 	endpoint,
 	title,
+	renderConfig,
 	refreshKey = 0,
 	className,
 }: TableDataWidgetProps<T>) => {
-	const { data, loading, error } = useFetch<TableData<T>>({
-		url: `${endpoint}?v=${refreshKey}`,
-		cache: true,
+	const [page, setPage] = useState(1);
+	const [pageSize] = useState(10);
+
+	const [searchInput, setSearchInput] = useState('');
+	const [sortConfig, setSortConfig] = useState<SortConfig<T>>({
+		key: '',
+		direction: null,
 	});
-	const [searchQuery, setSearchQuery] = useState('');
-	const [sortConfig, setSortConfig] = useState<SortConfig>(data?.defaultSort || { key: '', direction: null });
 
-	// Filter rows based on search query
-	const filteredRows = useMemo(() => {
-		if (!data || !searchQuery || !data.searchable) return data?.rows || [];
+	// Debounce search input to reduce API calls
+	const debouncedSearchQuery = useDebounce(searchInput, 300);
 
-		const query = searchQuery.toLowerCase();
-		return data.rows.filter((row) => {
-			return Object.values(row).some((value) => {
-				if (value === null || value === undefined) return false;
-				return String(value).toLowerCase().includes(query);
-			});
-		});
-	}, [data, searchQuery]);
+	const params = new URLSearchParams({
+		page: String(page),
+		pageSize: String(pageSize),
+		search: debouncedSearchQuery,
+		sortBy: String(sortConfig.key),
+		sortDir: sortConfig.direction || '',
+		v: String(refreshKey),
+	});
 
-	// Sort rows
-	const sortedRows = useMemo(() => {
-		if (!data || !sortConfig.key || !sortConfig.direction) return filteredRows;
+	const { data, loading, error } = useFetch<PaginatedTableData<T>>({
+		url: `${endpoint}?${params}`,
+		cache: false,
+	});
 
-		const sorted = [...filteredRows].sort((a, b) => {
-			const column = data.columns.find((col) => col.key === sortConfig.key);
+	// Merge server column configs with client render functions
+	const columns = data ? mergeColumnConfig(data.columns, renderConfig) : [];
 
-			// Use custom sort value function if provided
-			let aValue = column?.sortValue ? column.sortValue(a) : a[sortConfig.key];
-			let bValue = column?.sortValue ? column.sortValue(b) : b[sortConfig.key];
+	// Reset to page 1 when debounced search or sort changes
+	useEffect(() => {
+		setPage(1);
+	}, [debouncedSearchQuery, sortConfig]);
 
-			// Handle null/undefined values
-			if (aValue == null) return 1;
-			if (bValue == null) return -1;
-
-			// Compare values
-			if (typeof aValue === 'string' && typeof bValue === 'string') {
-				return aValue.localeCompare(bValue);
-			}
-
-			if (aValue < bValue) return -1;
-			if (aValue > bValue) return 1;
-			return 0;
-		});
-
-		return sortConfig.direction === 'desc' ? sorted.reverse() : sorted;
-	}, [filteredRows, sortConfig, data]);
-
-	const handleSort = (columnKey: string) => {
-		if (!data) return;
-		const column = data.columns.find((col) => col.key === columnKey);
+	// Three-state sort cycle: none → asc → desc → none
+	const handleSort = (columnKey: keyof T) => {
+		const column = columns.find((col) => col.key === columnKey);
 		if (!column?.sortable) return;
 
 		setSortConfig((prev) => {
@@ -81,14 +76,15 @@ export const TableDataWidget = <T extends Record<string, any>>({
 			if (prev.direction === 'asc') {
 				return { key: columnKey, direction: 'desc' };
 			}
-			if (prev.direction === 'desc') {
-				return { key: '', direction: null };
-			}
-			return { key: columnKey, direction: 'asc' };
+			return { key: '', direction: null };
 		});
 	};
 
-	const getSortIcon = (columnKey: string) => {
+	const handleSearch = (query: string) => {
+		setSearchInput(query);
+	};
+
+	const getSortIcon = (columnKey: keyof T) => {
 		if (sortConfig.key !== columnKey) {
 			return <ChevronsUpDown className="h-4 w-4 text-gray-400" />;
 		}
@@ -98,12 +94,12 @@ export const TableDataWidget = <T extends Record<string, any>>({
 		return <ChevronDown className="h-4 w-4 text-blue-600" />;
 	};
 
-	const renderCellValue = (column: ColumnDefinition<T>, row: T) => {
-		const value = row[column.key];
+	const renderCellValue = (column: ColumnDefinition<T>, row: T): React.ReactNode => {
+		const value = row[column.key as keyof T];
 		if (column.render) {
-			return column.render(value, row);
+			return column.render(value);
 		}
-		return value;
+		return String(value);
 	};
 
 	return (
@@ -148,13 +144,13 @@ export const TableDataWidget = <T extends Record<string, any>>({
 							<Text variant="h3" className="text-lg font-semibold text-gray-900">
 								{title}
 							</Text>
-							<Text className="text-sm text-gray-500">{sortedRows.length} items</Text>
+							{data.pagination && <Text className="text-sm text-gray-500">{data.pagination.total} items</Text>}
 						</div>
 
 						{data.searchable && (
 							<SearchBox
-								value={searchQuery}
-								onChange={setSearchQuery}
+								value={searchInput}
+								onChange={handleSearch}
 								placeholder="Search table..."
 								className="max-w-md"
 							/>
@@ -165,9 +161,9 @@ export const TableDataWidget = <T extends Record<string, any>>({
 						<table className="w-full">
 							<thead className="bg-gray-50 border-b border-gray-200">
 								<tr>
-									{data.columns.map((column) => (
+									{columns.map((column) => (
 										<th
-											key={column.key}
+											key={String(column.key)}
 											className={clsx(
 												'px-6 py-3 text-xs font-medium text-gray-700 uppercase tracking-wider',
 												column.sortable && 'cursor-pointer hover:bg-gray-100 select-none'
@@ -191,18 +187,18 @@ export const TableDataWidget = <T extends Record<string, any>>({
 								</tr>
 							</thead>
 							<tbody className="bg-white divide-y divide-gray-200">
-								{sortedRows.length === 0 ? (
+								{data.rows.length === 0 ? (
 									<tr>
-										<td colSpan={data.columns.length} className="px-6 py-8 text-center text-gray-500">
+										<td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
 											No data found
 										</td>
 									</tr>
 								) : (
-									sortedRows.map((row, index) => (
-										<tr key={row.id || index} className="hover:bg-gray-50 transition-colors">
-											{data.columns.map((column) => (
+									data.rows.map((row) => (
+										<tr key={row.id} className="hover:bg-gray-50 transition-colors">
+											{columns.map((column) => (
 												<td
-													key={column.key}
+													key={String(column.key)}
 													className={clsx(
 														'px-6 py-4 text-sm text-gray-900',
 														column.align === 'right' && 'text-right',
@@ -219,6 +215,57 @@ export const TableDataWidget = <T extends Record<string, any>>({
 							</tbody>
 						</table>
 					</div>
+
+					{/* Pagination Controls */}
+					{data.pagination && data.pagination.totalPages > 1 && (
+						<div className="p-4 border-t border-gray-200 flex items-center justify-between">
+							<Text className="text-sm text-gray-600">
+								Page {data.pagination.page} of {data.pagination.totalPages}
+								<span className="ml-2 text-gray-500">
+									(Showing {Math.min((data.pagination.page - 1) * data.pagination.pageSize + 1, data.pagination.total)}-
+									{Math.min(data.pagination.page * data.pagination.pageSize, data.pagination.total)} of{' '}
+									{data.pagination.total})
+								</span>
+							</Text>
+
+							<div className="flex items-center gap-2">
+								<Button theme="secondary" size="sm" disabled={page === 1 || loading} onClick={() => setPage(page - 1)}>
+									<ChevronLeft className="h-4 w-4" />
+									Previous
+								</Button>
+
+								{/* Page number buttons */}
+								<div className="flex gap-1">
+									{Array.from(
+										{ length: Math.min(5, data.pagination.totalPages) },
+										(_, i) => i + Math.max(1, Math.min(page - 2, data.pagination.totalPages - 4))
+									)
+										.filter((pageNum) => pageNum <= data.pagination.totalPages)
+										.map((pageNum) => (
+											<Button
+												key={pageNum}
+												theme={page === pageNum ? 'primary' : 'secondary'}
+												size="sm"
+												onClick={() => setPage(pageNum)}
+												disabled={loading}
+											>
+												{pageNum}
+											</Button>
+										))}
+								</div>
+
+								<Button
+									theme="secondary"
+									size="sm"
+									disabled={page === data.pagination.totalPages || loading}
+									onClick={() => setPage(page + 1)}
+								>
+									Next
+									<ChevronRight className="h-4 w-4" />
+								</Button>
+							</div>
+						</div>
+					)}
 				</>
 			)}
 		</Card>

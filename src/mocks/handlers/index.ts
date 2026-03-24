@@ -75,10 +75,83 @@ export const handlers = [
 		return HttpResponse.json(randomData(trafficSourcesData, trafficSourcesDataV2));
 	}),
 
-	// Table endpoint
-	http.get('*/api/analytics/tables/table-1', async () => {
+	// Table endpoint with server-side pagination
+	http.get('*/api/analytics/tables/table-1', async ({ request }) => {
 		console.log('[MSW] /api/analytics/tables/table-1 intercepted');
-		await delay(1200); // Tables are heavy
-		return HttpResponse.json(randomData(productPerformanceTable, productPerformanceTableV2));
+		await delay(800); // Simulate network delay
+
+		const url = new URL(request.url);
+		const page = parseInt(url.searchParams.get('page') || '1');
+		const pageSize = parseInt(url.searchParams.get('pageSize') || '10');
+		const search = url.searchParams.get('search') || '';
+		const sortBy = url.searchParams.get('sortBy') || 'revenue';
+		const sortDir = (url.searchParams.get('sortDir') as 'asc' | 'desc' | '') || 'desc';
+
+		// Start with full dataset
+		const baseData = randomData(productPerformanceTable, productPerformanceTableV2);
+		let allRows = [...baseData.rows];
+
+		// Step 1: Filter by search query (server-side search)
+		if (search) {
+			const query = search.toLowerCase();
+			allRows = allRows.filter((row) =>
+				Object.values(row).some((value) => {
+					if (value === null || value === undefined) return false;
+					return String(value).toLowerCase().includes(query);
+				})
+			);
+		}
+
+		// Step 2: Sort data (server-side sort)
+		if (sortBy && sortDir) {
+			allRows.sort((a, b) => {
+				const aValue = a[sortBy as keyof typeof a];
+				const bValue = b[sortBy as keyof typeof b];
+
+				// Handle null/undefined
+				if (aValue == null) return 1;
+				if (bValue == null) return -1;
+
+				// Compare values
+				let comparison = 0;
+				if (typeof aValue === 'string' && typeof bValue === 'string') {
+					comparison = aValue.localeCompare(bValue);
+				} else if (typeof aValue === 'number' && typeof bValue === 'number') {
+					comparison = aValue - bValue;
+				}
+
+				return sortDir === 'desc' ? -comparison : comparison;
+			});
+		}
+
+		// Step 3: Paginate (server-side pagination)
+		const total = allRows.length;
+		const totalPages = Math.ceil(total / pageSize);
+		const start = (page - 1) * pageSize;
+		const end = start + pageSize;
+		const pageRows = allRows.slice(start, end);
+
+		// Return paginated response (server sends column config, client has render functions)
+		return HttpResponse.json({
+			id: baseData.id,
+			title: baseData.title,
+			columns: [
+				{ key: 'product', label: 'Product', sortable: true, align: 'left', width: '25%' },
+				{ key: 'category', label: 'Category', sortable: true, align: 'left', width: '15%' },
+				{ key: 'revenue', label: 'Revenue', sortable: true, align: 'right', width: '15%' },
+				{ key: 'units', label: 'Units Sold', sortable: true, align: 'right', width: '12%' },
+				{ key: 'growth', label: 'Growth', sortable: true, align: 'right', width: '12%' },
+				{ key: 'status', label: 'Status', sortable: true, align: 'right', width: '13%' },
+			],
+			rows: pageRows,
+			searchable: baseData.searchable,
+			pagination: {
+				page,
+				pageSize,
+				total,
+				totalPages,
+			},
+			defaultSort: baseData.defaultSort,
+		});
 	}),
 ];
