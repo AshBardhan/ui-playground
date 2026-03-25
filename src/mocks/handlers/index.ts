@@ -36,10 +36,51 @@ export const handlers = [
 		return HttpResponse.json(campaignList);
 	}),
 
-	http.get('*/api/dashboard/campaigns', async () => {
+	http.get('*/api/dashboard/campaigns', async ({ request }) => {
 		console.log('[MSW] /api/dashboard/campaigns intercepted');
 		await delay(800);
-		return HttpResponse.json(mockCampaigns);
+
+		const url = new URL(request.url);
+		const cursor = url.searchParams.get('cursor');
+		const limit = parseInt(url.searchParams.get('limit') || '50');
+		const statusFilter = url.searchParams.get('status');
+		const searchQuery = url.searchParams.get('search');
+
+		// Start with all campaigns
+		let filteredCampaigns = [...mockCampaigns];
+
+		// Apply status filter
+		if (statusFilter) {
+			const statuses = statusFilter.split(',');
+			filteredCampaigns = filteredCampaigns.filter((campaign) => statuses.includes(campaign.status));
+		}
+
+		// Apply search filter
+		if (searchQuery) {
+			const query = searchQuery.toLowerCase();
+			filteredCampaigns = filteredCampaigns.filter((campaign) => campaign.name.toLowerCase().includes(query));
+		}
+
+		// Find cursor position
+		let startIndex = 0;
+		if (cursor) {
+			const cursorIndex = filteredCampaigns.findIndex((c) => c.id === cursor);
+			startIndex = cursorIndex >= 0 ? cursorIndex + 1 : 0;
+		}
+
+		// Paginate
+		const paginatedData = filteredCampaigns.slice(startIndex, startIndex + limit);
+		const hasMore = startIndex + limit < filteredCampaigns.length;
+		const nextCursor = hasMore ? paginatedData[paginatedData.length - 1].id : null;
+
+		return HttpResponse.json({
+			data: paginatedData,
+			pagination: {
+				nextCursor,
+				hasMore,
+				total: filteredCampaigns.length,
+			},
+		});
 	}),
 
 	// All metrics in one call

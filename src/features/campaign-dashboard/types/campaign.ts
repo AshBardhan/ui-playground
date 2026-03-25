@@ -18,3 +18,14 @@ export interface CampaignFilters {
 	status?: CampaignStatus[];
 	search?: string;
 }
+
+export interface PaginationInfo {
+	nextCursor: string | null;
+	hasMore: boolean;
+	total: number;
+}
+
+export interface CampaignPageResponse {
+	data: Campaign[];
+	pagination: PaginationInfo;
+}
