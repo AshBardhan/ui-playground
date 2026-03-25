@@ -17,9 +17,10 @@ export const DropdownList = ({
 	onSelect,
 	theme = 'light',
 }: DropdownListProps) => {
-	const listboxClasses = clsx(
+	const listboxButtonClasses = clsx(
 		'flex items-center justify-between gap-2 border px-2 rounded h-8 min-w-20',
 		disabled && 'opacity-50 cursor-not-allowed',
+		!disabled && 'cursor-pointer',
 		theme === 'light' && (disabled ? 'bg-gray-100' : 'bg-white border-gray-300 text-gray-900'),
 		theme === 'dark' && (disabled ? 'bg-gray-700' : 'bg-gray-800 border-gray-600 text-gray-100')
 	);
@@ -36,7 +37,7 @@ export const DropdownList = ({
 		<Listbox value={selectedOption} onChange={onSelect} disabled={disabled} as="div">
 			{({ open }) => (
 				<>
-					<ListboxButton className={listboxClasses}>
+					<ListboxButton className={listboxButtonClasses}>
 						<span>{selectedOption}</span>
 						{open ? <ChevronUpIcon size={16} /> : <ChevronDownIcon size={16} />}
 					</ListboxButton>
@@ -47,7 +48,7 @@ export const DropdownList = ({
 							theme === 'light' && 'bg-white border-gray-300',
 							theme === 'dark' && 'bg-gray-800 border-gray-600'
 						)}
-						anchor="bottom start"
+						anchor="bottom end"
 					>
 						{options.map((option) => (
 							<ListboxOption key={option} value={option}>

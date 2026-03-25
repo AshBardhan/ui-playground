@@ -34,7 +34,7 @@ export const FilterGroup = ({ title, options, selectedValues, onChange, classNam
 	};
 
 	return (
-		<div className={clsx('space-y-3', className)}>
+		<div className={clsx('space-y-2', className)}>
 			<div className="flex items-center justify-between">
 				<Text variant="h5">{title}</Text>
 				<div className="flex gap-1 items-center">
@@ -54,8 +54,8 @@ export const FilterGroup = ({ title, options, selectedValues, onChange, classNam
 						<Field
 							key={option.value}
 							className={clsx(
-								'flex items-center gap-2 cursor-pointer',
-								'p-2 rounded-md hover:bg-gray-50 transition-colors'
+								'flex items-center gap-3 cursor-pointer',
+								'px-2 py-1 rounded-md hover:bg-gray-50 transition-colors'
 							)}
 						>
 							<Checkbox
@@ -68,7 +68,7 @@ export const FilterGroup = ({ title, options, selectedValues, onChange, classNam
 							>
 								<Check className="h-3 w-3 text-white opacity-0 group-data-checked:opacity-100" strokeWidth={3} />
 							</Checkbox>
-							<Label className="flex-1 font-medium text-sm text-gray-700 cursor-pointer">{option.label}</Label>
+							<Label className="flex-1 font-medium text-sm text-gray-800 cursor-pointer">{option.label}</Label>
 						</Field>
 					);
 				})}

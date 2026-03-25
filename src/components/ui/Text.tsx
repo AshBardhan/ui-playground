@@ -9,14 +9,14 @@ interface TextProps {
 
 export const Text = ({ variant = 'div', children, className }: TextProps) => {
 	const baseClasses = clsx(
-		variant === 'h1' && 'text-3xl font-bold text-gray-900',
-		variant === 'h2' && 'text-2xl font-bold tracking-tight text-gray-900',
-		variant === 'h3' && 'text-xl font-bold text-gray-900',
-		variant === 'h4' && 'text-lg font-semibold text-gray-900',
-		variant === 'h5' && 'text-base font-semibold text-gray-900',
-		variant === 'h6' && 'text-sm font-semibold text-gray-900',
-		variant === 'p' && 'font-normal text-gray-700',
-		variant === 'div' && 'font-normal text-gray-700',
+		variant === 'h1' && 'text-2xl font-bold text-gray-900',
+		variant === 'h2' && 'text-xl font-bold text-gray-900',
+		variant === 'h3' && 'text-lg font-bold text-gray-900',
+		variant === 'h4' && 'text-base font-semibold text-gray-900',
+		variant === 'h5' && 'text-sm font-semibold text-gray-900',
+		variant === 'h6' && 'text-xs font-semibold text-gray-900',
+		variant === 'p' && 'text-sm font-normal text-gray-700',
+		variant === 'div' && 'text-sm font-normal text-gray-700',
 		className
 	);
 

@@ -38,8 +38,8 @@ export const SearchBox = ({
 	const iconPadding = size === 'sm' ? 'pl-8' : size === 'lg' ? 'pl-12' : 'pl-10';
 
 	return (
-		<Field className={className}>
-			{label && <Label className="block text-sm font-medium text-gray-800 mb-2 cursor-pointer">{label}</Label>}
+		<Field className={clsx('space-y-2', className)}>
+			{label && <Label className="block text-sm font-medium text-gray-800 cursor-pointer">{label}</Label>}
 			<div className="relative">
 				<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={iconSize} />
 				<Input
