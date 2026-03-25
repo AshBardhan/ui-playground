@@ -7,8 +7,9 @@ async function prepare() {
 	if (import.meta.env.MODE === 'development') {
 		const { worker } = await import('./mocks/browser');
 		await worker.start({
-			onUnhandledRequest: 'bypass',
+			onUnhandledRequest: 'warn',
 		});
+		console.log('[MSW] Service worker started successfully');
 	}
 }
 
