@@ -98,13 +98,11 @@ export const MetricDataWidget = ({ endpoint, refreshKey = 0, className }: Metric
 			{loading && (
 				<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 					{[1, 2, 3, 4].map((i) => (
-						<div key={i} className="space-y-3">
-							<Skeleton height={16} />
-							<Skeleton height={36} />
+						<div key={i} className="space-y-2">
+							<Skeleton height={20} />
+							<Skeleton height={32} />
 							<Skeleton height={12} />
-							<div className="pt-2">
-								<Skeleton height={20} />
-							</div>
+							<Skeleton height={20} />
 						</div>
 					))}
 				</div>

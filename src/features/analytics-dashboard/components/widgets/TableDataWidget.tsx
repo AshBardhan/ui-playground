@@ -103,60 +103,41 @@ export const TableDataWidget = <T extends { id: string }>({
 	};
 
 	return (
-		<Card className={clsx('p-0 overflow-hidden', className)}>
+		<Card className={clsx('p-0! overflow-hidden', className)}>
+			<div className="p-4 sm:p-6 border-b border-gray-200 flex items-start justify-between flex-col md:flex-row md:items-center gap-3">
+				<Text variant="h3" className="text-lg font-semibold text-gray-900">
+					{title} {!loading && data?.pagination && <span>({data?.pagination.total})</span>}
+				</Text>
+
+				{data?.searchable && (
+					<SearchBox
+						value={searchInput}
+						onChange={handleSearch}
+						placeholder="Search table..."
+						className="md:max-w-sm w-full max-w-full"
+					/>
+				)}
+			</div>
+
 			{loading && (
-				<>
-					<div className="p-6 border-b border-gray-200">
-						<div className="space-y-4">
-							<div className="flex items-center justify-between">
-								<Skeleton height={24} />
-								<Skeleton height={20} />
-							</div>
-							<Skeleton height={40} />
-						</div>
-					</div>
-					<div className="p-6">
-						<div className="space-y-3">
-							<Skeleton height={40} />
-							{[1, 2, 3, 4, 5].map((i) => (
-								<Skeleton key={i} height={48} />
-							))}
-						</div>
-					</div>
-				</>
+				<div className="p-4 sm:p-6 space-y-3">
+					{[1, 2, 3, 4, 5, 6].map((i) => (
+						<Skeleton key={i} height={40} />
+					))}
+				</div>
 			)}
 
 			{error && (
-				<div className="p-6">
-					<div className="flex items-center gap-2 text-red-600">
-						<AlertCircle className="h-5 w-5" />
-						<Text variant="p" className="text-sm">
-							{error.message}
-						</Text>
-					</div>
+				<div className="p-6 flex items-center gap-2 text-red-600">
+					<AlertCircle className="h-5 w-5" />
+					<Text variant="p" className="text-sm">
+						{error.message}
+					</Text>
 				</div>
 			)}
 
 			{!loading && !error && data && (
 				<>
-					<div className="p-6 border-b border-gray-200">
-						<div className="flex items-center justify-between mb-4">
-							<Text variant="h3" className="text-lg font-semibold text-gray-900">
-								{title}
-							</Text>
-							{data.pagination && <Text className="text-sm text-gray-500">{data.pagination.total} items</Text>}
-						</div>
-
-						{data.searchable && (
-							<SearchBox
-								value={searchInput}
-								onChange={handleSearch}
-								placeholder="Search table..."
-								className="max-w-md"
-							/>
-						)}
-					</div>
-
 					<div className="overflow-x-auto">
 						<table className="w-full">
 							<thead className="bg-gray-50 border-b border-gray-200">
@@ -165,7 +146,7 @@ export const TableDataWidget = <T extends { id: string }>({
 										<th
 											key={String(column.key)}
 											className={clsx(
-												'px-6 py-3 text-xs font-medium text-gray-700 uppercase tracking-wider',
+												'px-3 py-2 sm:px-6 sm:py-4 text-xs font-medium text-gray-700 uppercase tracking-wider',
 												column.sortable && 'cursor-pointer hover:bg-gray-100 select-none'
 											)}
 											style={{ width: column.width }}
@@ -194,13 +175,16 @@ export const TableDataWidget = <T extends { id: string }>({
 										</td>
 									</tr>
 								) : (
-									data.rows.map((row) => (
-										<tr key={row.id} className="hover:bg-gray-50 transition-colors">
+									data.rows.map((row, index) => (
+										<tr
+											key={row.id}
+											className={clsx('hover:bg-gray-100 transition-colors', index % 2 === 1 && 'bg-gray-50')}
+										>
 											{columns.map((column) => (
 												<td
 													key={String(column.key)}
 													className={clsx(
-														'px-6 py-4 text-sm text-gray-900',
+														'px-3 py-2 sm:px-6 sm:py-4 sm:text-sm text-xs text-gray-900',
 														column.align === 'right' && 'text-right',
 														column.align === 'left' && 'text-left',
 														!column.align && 'text-left'
@@ -219,12 +203,16 @@ export const TableDataWidget = <T extends { id: string }>({
 					{/* Pagination Controls */}
 					{data.pagination && data.pagination.totalPages > 1 && (
 						<div className="p-4 border-t border-gray-200 flex items-center justify-between">
-							<Text className="text-sm text-gray-600">
-								Page {data.pagination.page} of {data.pagination.totalPages}
-								<span className="ml-2 text-gray-500">
-									(Showing {Math.min((data.pagination.page - 1) * data.pagination.pageSize + 1, data.pagination.total)}-
-									{Math.min(data.pagination.page * data.pagination.pageSize, data.pagination.total)} of{' '}
-									{data.pagination.total})
+							<Text className="text-xs md:text-base text-gray-800">
+								Page <span className="font-semibold">{data.pagination.page}</span> of{' '}
+								<span className="font-semibold">{data.pagination.totalPages}</span>
+								<span className="ml-4 text-xs text-gray-500">
+									(Showing{' '}
+									<span className="font-medium">
+										{Math.min((data.pagination.page - 1) * data.pagination.pageSize + 1, data.pagination.total)}-
+										{Math.min(data.pagination.page * data.pagination.pageSize, data.pagination.total)}
+									</span>{' '}
+									of <span className="font-medium">{data.pagination.total}</span>)
 								</span>
 							</Text>
 

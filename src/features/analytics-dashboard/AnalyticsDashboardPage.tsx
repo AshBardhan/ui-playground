@@ -23,8 +23,8 @@ export const AnalyticsDashboardPage = () => {
 						Real-time analytics and insights
 					</Text>
 				</div>
-				<Button onClick={handleRefresh} theme="secondary">
-					<RefreshCw className="h-4 w-4" />
+				<Button onClick={handleRefresh} theme="secondary" size="lg">
+					<RefreshCw className="h-5 w-5" />
 					Refresh
 				</Button>
 			</div>

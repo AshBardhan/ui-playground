@@ -17,7 +17,9 @@ export const productPerformanceColumnRenderConfig: ColumnRenderConfig<ProductPer
 	revenue: (value: number) => formatCurrency(value),
 	units: (value: number) => formatNumber(value),
 	growth: (value: number) => (
-		<span className={clsx('font-semibold', value > 0 ? 'text-green-600' : value < 0 ? 'text-red-600' : 'text-gray-600')}>
+		<span
+			className={clsx('font-semibold', value > 0 ? 'text-green-600' : value < 0 ? 'text-red-600' : 'text-gray-600')}
+		>
 			{formatPercentage(value)}
 		</span>
 	),
