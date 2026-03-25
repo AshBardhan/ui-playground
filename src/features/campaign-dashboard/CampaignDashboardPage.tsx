@@ -1,16 +1,22 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Campaign, CampaignFilters, CampaignStatus } from './types/campaign';
-import { CampaignDashboardLayout } from './components/CampaignDashboardLayout';
 import { CampaignListPanel } from './components/CampaignListPanel';
 import { CampaignFilterPanel } from './components/CampaignFilterPanel';
-import { Text } from '@/components/ui/Text';
 import { Button } from '@/components/ui/Button';
+import { Text } from '@/components/ui/Text';
+import { Card } from '@/components/ui/Card';
 import { useInfiniteCampaigns } from './hooks/useInfiniteCampaigns';
 import { getCampaignStatusFilterOptions } from './utils/campaignUtils';
+import { PageLayout } from '@/components/layout/PageLayout';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { PageContent } from '@/components/layout/PageContent';
+import { Dialog, DialogPanel } from '@headlessui/react';
+import { Filter, X } from 'lucide-react';
 
 export const CampaignDashboardPage = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
+	const [isFilterOpen, setIsFilterOpen] = useState(false);
 
 	// Parse filters from URL query parameters (enables shareable/bookmarkable filters)
 	const filters = useMemo<CampaignFilters>(() => {
@@ -66,43 +72,84 @@ export const CampaignDashboardPage = () => {
 		}
 	};
 
-	if (error) {
-		return (
-			<div className="h-full flex items-center justify-center">
-				<div className="text-center">
-					<div className="text-red-600 text-lg mb-2">Error loading campaigns</div>
-					<div className="text-gray-600">{error.message}</div>
-					<Button onClick={() => window.location.reload()} className="mt-4">
-						Retry
-					</Button>
-				</div>
-			</div>
-		);
-	}
-
 	return (
-		<div className="flex flex-col gap-4">
-			{/* Header with dynamic count display */}{' '}
-			<Text variant="h1">Campaigns {!isLoading && campaigns.length > 0 && `(${campaigns.length} of ${total})`}</Text>
-			<CampaignDashboardLayout
-				leftContent={
-					<CampaignListPanel
-						campaigns={campaigns}
-						loading={isLoading}
-						loadingMore={isFetchingNextPage}
-						hasMore={hasNextPage}
-						onLoadMore={handleLoadMore}
-						onCampaignClick={handleCampaignClick}
-					/>
-				}
-				rightContent={
-					<CampaignFilterPanel
-						filters={filters}
-						onFiltersChange={handleFiltersChange}
-						statusOptions={statusFilterOptions}
-					/>
-				}
-			/>
-		</div>
+		<PageLayout>
+			<PageHeader>
+				<div className="flex items-center justify-between gap-2">
+					<div className="space-y-1">
+						<Text variant="h1">
+							Campaigns
+							{!isLoading && campaigns.length > 0 && <span className="ml-2">({campaigns.length})</span>}
+						</Text>
+						<Text variant="p" className="text-gray-500">
+							Manage your campaigns and view performance metrics
+						</Text>
+					</div>
+					<div className="lg:hidden">
+						<Button onClick={() => setIsFilterOpen(true)} theme="secondary" size="sm">
+							<Filter className="h-4 w-4 mr-2" />
+							Filters
+						</Button>
+					</div>
+				</div>
+
+				{/* Mobile filter modal */}
+				<Dialog open={isFilterOpen} onClose={() => setIsFilterOpen(false)} className="relative z-50 lg:hidden">
+					{/* Backdrop */}
+					<div className="fixed inset-0 bg-black/30" aria-hidden="true" />
+
+					{/* Full-screen modal */}
+					<div className="fixed inset-0 flex items-center justify-center p-4">
+						<DialogPanel className="relative w-full max-w-md max-h-[90vh] overflow-y-auto bg-white rounded-lg p-4">
+							{/* Close button at top right */}
+							<button
+								onClick={() => setIsFilterOpen(false)}
+								className="absolute top-4 right-4 p-1 hover:bg-gray-100 rounded transition-colors"
+								aria-label="Close filters"
+							>
+								<X className="h-5 w-5" />
+							</button>
+
+							{/* Modal content */}
+							<CampaignFilterPanel
+								filters={filters}
+								onFiltersChange={handleFiltersChange}
+								statusOptions={statusFilterOptions}
+							/>
+						</DialogPanel>
+					</div>
+				</Dialog>
+			</PageHeader>
+			<PageContent>
+				{/* Two-column grid layout */}
+				<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+					{/* Main content area - campaigns list */}
+					<div className="lg:col-span-2">
+						<CampaignListPanel
+							campaigns={campaigns}
+							loading={isLoading}
+							loadingMore={isFetchingNextPage}
+							hasMore={hasNextPage}
+							error={error}
+							onLoadMore={handleLoadMore}
+							onCampaignClick={handleCampaignClick}
+						/>
+					</div>
+
+					{/* Sidebar - filters (sticky on scroll, hidden on mobile) */}
+					<div className="hidden lg:block lg:col-span-1">
+						<div className="sticky top-8">
+							<Card>
+								<CampaignFilterPanel
+									filters={filters}
+									onFiltersChange={handleFiltersChange}
+									statusOptions={statusFilterOptions}
+								/>
+							</Card>
+						</div>
+					</div>
+				</div>
+			</PageContent>
+		</PageLayout>
 	);
 };

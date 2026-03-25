@@ -5,6 +5,9 @@ import { DynamicFilterBox } from './components/DynamicFilterBox';
 import { DynamicFilterBoxSkeleton } from './components/DynamicFilterBoxSkeleton';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
+import { PageLayout } from '@/components/layout/PageLayout';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { PageContent } from '@/components/layout/PageContent';
 
 export const DynamicFilterPage = () => {
 	const [loading, setLoading] = useState(true);
@@ -127,41 +130,51 @@ export const DynamicFilterPage = () => {
 	}, []);
 
 	return (
-		<div className="flex flex-col gap-4">
-			<Text variant="h1">Dynamic Filter</Text>
-			<div className="flex flex-col lg:flex-row gap-5 min-h-[20vh]">
-				<Card className="flex-1">
-					<Text variant="h4" className="mb-4">
-						Config Mode
+		<PageLayout>
+			<PageHeader>
+				<div className="space-y-1">
+					<Text variant="h1">Dynamic Filter</Text>
+					<Text variant="p" className="text-gray-500">
+						Advanced dynamic filtering system with configurable conditions, operators, and logical grouping for complex
+						queries.
 					</Text>
-					{loading ? (
-						<DynamicFilterBoxSkeleton />
-					) : (
-						<DynamicFilterBox
-							schema={schemaList}
-							conditions={conditions}
-							onFieldChange={handleFieldChange}
-							onLogicalOperatorChange={handleLogicalOperatorChange}
-							onOperatorChange={handleOperatorChange}
-							onValueChange={handleValueChange}
-							onLeftBracketToggle={handleLeftBracketToggle}
-							onRightBracketToggle={handleRightBracketToggle}
-							onAddCondition={addCondition}
-							onRemoveCondition={removeCondition}
-						/>
-					)}
-				</Card>
-				<Card className="flex-1">
-					<Text variant="h4" className="mb-4">
-						Read-Only Mode
-					</Text>
-					{loading ? (
-						<DynamicFilterBoxSkeleton />
-					) : (
-						<DynamicFilterBox schema={schemaList} conditions={conditions} isReadOnly={true} />
-					)}
-				</Card>
-			</div>
-		</div>
+				</div>
+			</PageHeader>
+			<PageContent>
+				<div className="flex flex-col lg:flex-row gap-5 min-h-[20vh]">
+					<Card className="flex-1">
+						<Text variant="h4" className="mb-4">
+							Config Mode
+						</Text>
+						{loading ? (
+							<DynamicFilterBoxSkeleton />
+						) : (
+							<DynamicFilterBox
+								schema={schemaList}
+								conditions={conditions}
+								onFieldChange={handleFieldChange}
+								onLogicalOperatorChange={handleLogicalOperatorChange}
+								onOperatorChange={handleOperatorChange}
+								onValueChange={handleValueChange}
+								onLeftBracketToggle={handleLeftBracketToggle}
+								onRightBracketToggle={handleRightBracketToggle}
+								onAddCondition={addCondition}
+								onRemoveCondition={removeCondition}
+							/>
+						)}
+					</Card>
+					<Card className="flex-1">
+						<Text variant="h4" className="mb-4">
+							Read-Only Mode
+						</Text>
+						{loading ? (
+							<DynamicFilterBoxSkeleton />
+						) : (
+							<DynamicFilterBox schema={schemaList} conditions={conditions} isReadOnly={true} />
+						)}
+					</Card>
+				</div>
+			</PageContent>
+		</PageLayout>
 	);
 };

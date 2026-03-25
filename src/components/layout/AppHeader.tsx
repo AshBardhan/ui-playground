@@ -1,5 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { DropdownList } from '@/components/ui/DropdownList';
+import { Home } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 const pages = [
@@ -9,7 +10,7 @@ const pages = [
 	{ title: 'Dynamic Filter', path: '/dynamic-filter' },
 ];
 
-export const Header = () => {
+export const AppHeader = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const currentPage = pages.find((p) => p.path === location.pathname);
@@ -34,7 +35,7 @@ export const Header = () => {
 		<header className="flex-shrink-0 bg-gray-900 text-gray-100 shadow-md">
 			<div className="container mx-auto px-4 py-4 flex items-center justify-between">
 				<Link to="/" className="text-2xl font-bold hover:text-gray-300 transition-colors">
-					UI Playground
+					<Home className="h-8 w-8" />
 				</Link>
 				<nav>
 					<DropdownList

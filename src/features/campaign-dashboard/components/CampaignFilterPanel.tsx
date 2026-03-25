@@ -3,7 +3,6 @@ import { SearchBox } from '@/components/ui/SearchBox';
 import { FilterGroup } from '@/components/ui/FilterGroup';
 import { Button } from '@/components/ui/Button';
 import type { FilterOption } from '@/components/ui/FilterGroup';
-import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
 
 interface CampaignFilterPanelProps {
@@ -38,15 +37,8 @@ export const CampaignFilterPanel = ({
 	const hasActiveFilters = filters.search || (filters.status && filters.status.length > 0);
 
 	return (
-		<Card>
-			<div className="flex items-center justify-between mb-4">
-				<Text variant="h5">Filters</Text>
-				{hasActiveFilters && (
-					<Button type="reset" onClick={handleClearFilters} theme="secondary">
-						Clear all
-					</Button>
-				)}
-			</div>
+		<div className="space-y-2">
+			<Text variant="h3">Filters</Text>
 
 			<div className="space-y-6">
 				<SearchBox
@@ -65,18 +57,25 @@ export const CampaignFilterPanel = ({
 			</div>
 
 			{hasActiveFilters && (
-				<div className="mt-4 pt-4 border-t border-gray-200 flex gap-0.5 items-center flex-wrap">
-					<Text variant="h6">Active filters:</Text>
-					{filters.search && (
-						<span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Search: "{filters.search}"</span>
-					)}
-					{filters.status && filters.status.length > 0 && (
-						<span className="ml-2 px-2 py-1 bg-green-100 text-green-800 rounded text-xs">
-							Status: {filters.status.length} selected
-						</span>
-					)}
+				<div className="pt-4 border-t border-gray-200 space-y-1">
+					<div className="flex items-center justify-between">
+						<Text variant="h5">Active filters</Text>
+						<Button type="reset" onClick={handleClearFilters} theme="ghost" size="sm" className="text-gray-600">
+							Clear all
+						</Button>
+					</div>
+					<div className="flex flex-wrap gap-2">
+						{filters.search && (
+							<span className="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Search: "{filters.search}"</span>
+						)}
+						{filters.status && filters.status.length > 0 && (
+							<span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">
+								Status: {filters.status.length} selected
+							</span>
+						)}
+					</div>
 				</div>
 			)}
-		</Card>
+		</div>
 	);
 };

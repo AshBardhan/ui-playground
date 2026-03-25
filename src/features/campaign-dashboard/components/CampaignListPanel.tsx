@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import clsx from 'clsx';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
+import { Button } from '@/components/ui/Button';
 import { CampaignCardSkeleton } from './CampaignCardSkeleton';
 
 interface CampaignListPanelProps {
@@ -12,6 +13,7 @@ interface CampaignListPanelProps {
 	loading?: boolean;
 	loadingMore?: boolean;
 	hasMore?: boolean;
+	error?: Error | null;
 	onLoadMore?: () => void;
 	onCampaignClick?: (campaign: Campaign) => void;
 	className?: string;
@@ -22,6 +24,7 @@ export const CampaignListPanel = ({
 	loading = false,
 	loadingMore = false,
 	hasMore = false,
+	error = null,
 	onLoadMore,
 	onCampaignClick,
 	className,
@@ -52,6 +55,21 @@ export const CampaignListPanel = ({
 			}
 		};
 	}, [hasMore, loading, loadingMore, onLoadMore]);
+
+	// Error state
+	if (error) {
+		return (
+			<Card className={clsx('h-full flex flex-col items-center justify-center  gap-4', className)}>
+				<div className="text-center space-y-1">
+					<Text variant="h3" className="text-red-600">
+						Error loading campaigns
+					</Text>
+					<Text variant="p">{error.message || 'An unexpected error occurred while fetching campaigns.'}</Text>
+				</div>
+				<Button onClick={() => window.location.reload()}>Retry</Button>
+			</Card>
+		);
+	}
 
 	// Initial loading state
 	if (loading) {
