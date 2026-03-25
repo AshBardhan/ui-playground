@@ -1,35 +1,8 @@
 import { Campaign } from '../types/campaign';
 import { Badge } from '@/components/ui/Badge';
 import { Metric } from '@/components/ui/Metric';
+import { getCampaignStatusLabel, getCampaignStatusVariant } from '../constants/campaign-status';
 import clsx from 'clsx';
-
-const getStatusVariant = (status: Campaign['status']) => {
-	switch (status) {
-		case 'RUNNING':
-			return 'success';
-		case 'PAUSED':
-			return 'warning';
-		case 'ARCHIVED':
-			return 'error';
-		case 'DRAFT':
-		default:
-			return 'neutral';
-	}
-};
-
-const getStatusLabel = (status: Campaign['status']) => {
-	switch (status) {
-		case 'RUNNING':
-			return 'Running';
-		case 'PAUSED':
-			return 'Paused';
-		case 'ARCHIVED':
-			return 'Archived';
-		case 'DRAFT':
-		default:
-			return 'Draft';
-	}
-};
 
 interface CampaignCardProps {
 	campaign: Campaign;
@@ -42,6 +15,7 @@ export const CampaignCard = ({ campaign, onClick, className }: CampaignCardProps
 		onClick?.(campaign);
 	};
 
+	// Format number as USD currency without decimals
 	const formatCurrency = (amount: number) => {
 		return new Intl.NumberFormat('en-US', {
 			style: 'currency',
@@ -50,10 +24,12 @@ export const CampaignCard = ({ campaign, onClick, className }: CampaignCardProps
 		}).format(amount);
 	};
 
+	// Format number with thousand separators
 	const formatValue = (val: number) => {
 		return val.toLocaleString();
 	};
 
+	// Draft campaigns don't have metrics yet
 	const isDraft = campaign.status === 'DRAFT';
 
 	return (
@@ -63,15 +39,17 @@ export const CampaignCard = ({ campaign, onClick, className }: CampaignCardProps
 		>
 			<div className="flex items-start justify-between mb-3">
 				<h3 className="text-lg font-semibold text-gray-900 truncate">{campaign.name}</h3>
-				<Badge label={getStatusLabel(campaign.status)} variant={getStatusVariant(campaign.status)} />
+				{/* Display status badge with dynamic label and color variant */}
+				<Badge label={getCampaignStatusLabel(campaign.status)} variant={getCampaignStatusVariant(campaign.status)} />
 			</div>
 
+			{/* Only show metrics for non-draft campaigns */}
 			{!isDraft && (
-				<div className="flex flex-col sm:flex-row gap-4 mb-3">
-					<Metric className="flex-1" label="Impressions" value={campaign.metrics.impressions} />
-					<Metric className="flex-1" label="Clicks" value={campaign.metrics.clicks} />
-					<Metric className="flex-1" label="Conversions" value={campaign.metrics.conversions} />
-					<Metric className="flex-1" label="Spend" value={formatCurrency(campaign.metrics.spend)} />
+				<div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-3">
+					<Metric label="Impressions" value={campaign.metrics.impressions} />
+					<Metric label="Clicks" value={campaign.metrics.clicks} />
+					<Metric label="Conversions" value={campaign.metrics.conversions} />
+					<Metric label="Spend" value={formatCurrency(campaign.metrics.spend)} />
 				</div>
 			)}
 

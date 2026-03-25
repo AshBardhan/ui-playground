@@ -2,35 +2,43 @@ import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Campaign, CampaignFilters, CampaignStatus } from './types/campaign';
 import { CampaignDashboardLayout } from './components/CampaignDashboardLayout';
-import { CampaignList } from './components/CampaignList';
-import { FilterPanel } from './components/FilterPanel';
+import { CampaignListPanel } from './components/CampaignListPanel';
+import { CampaignFilterPanel } from './components/CampaignFilterPanel';
 import { Text } from '@/components/ui/Text';
 import { Button } from '@/components/ui/Button';
 import { useInfiniteCampaigns } from './hooks/useInfiniteCampaigns';
+import { getCampaignStatusFilterOptions } from './utils/campaignUtils';
 
 export const CampaignDashboardPage = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	// Read filters from URL
+	// Parse filters from URL query parameters (enables shareable/bookmarkable filters)
 	const filters = useMemo<CampaignFilters>(() => {
 		const statusParam = searchParams.get('status');
 		const searchParam = searchParams.get('search');
 
 		return {
+			// Parse comma-separated status values, filter out empty strings
 			status: statusParam ? (statusParam.split(',').filter(Boolean) as CampaignStatus[]) : undefined,
 			search: searchParam || undefined,
 		};
 	}, [searchParams]);
 
-	// Fetch campaigns with infinite scroll
+	// Fetch campaigns with infinite scroll using React Query
 	const { data, error, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteCampaigns(filters);
 
-	// Flatten all pages into single array
+	// Flatten paginated results into single array for rendering
 	const campaigns = data?.pages.flatMap((page) => page.data) ?? [];
 	const total = data?.pages[0]?.pagination.total ?? 0;
 
+	// Generate filter options with counts from loaded campaigns (hides counts during loading)
+	const statusFilterOptions = useMemo(
+		() => getCampaignStatusFilterOptions(isLoading ? undefined : campaigns),
+		[campaigns, isLoading]
+	);
+
 	const handleFiltersChange = (newFilters: CampaignFilters) => {
-		// Update URL with new filters
+		// Sync filters to URL query parameters
 		const params = new URLSearchParams();
 
 		if (newFilters.status && newFilters.status.length > 0) {
@@ -41,8 +49,9 @@ export const CampaignDashboardPage = () => {
 			params.set('search', newFilters.search);
 		}
 
+		// Use replace to avoid cluttering browser history
 		setSearchParams(params, { replace: true });
-		// React Query automatically refetches with new filters from URL
+		// React Query automatically refetches when queryKey (includes filters) changes
 	};
 
 	const handleCampaignClick = (campaign: Campaign) => {
@@ -51,6 +60,7 @@ export const CampaignDashboardPage = () => {
 	};
 
 	const handleLoadMore = () => {
+		// Trigger next page fetch if more pages available and not already fetching
 		if (hasNextPage && !isFetchingNextPage) {
 			fetchNextPage();
 		}
@@ -72,10 +82,11 @@ export const CampaignDashboardPage = () => {
 
 	return (
 		<div className="flex flex-col gap-4">
+			{/* Header with dynamic count display */}{' '}
 			<Text variant="h1">Campaigns {!isLoading && campaigns.length > 0 && `(${campaigns.length} of ${total})`}</Text>
 			<CampaignDashboardLayout
 				leftContent={
-					<CampaignList
+					<CampaignListPanel
 						campaigns={campaigns}
 						loading={isLoading}
 						loadingMore={isFetchingNextPage}
@@ -84,7 +95,13 @@ export const CampaignDashboardPage = () => {
 						onCampaignClick={handleCampaignClick}
 					/>
 				}
-				rightContent={<FilterPanel filters={filters} onFiltersChange={handleFiltersChange} />}
+				rightContent={
+					<CampaignFilterPanel
+						filters={filters}
+						onFiltersChange={handleFiltersChange}
+						statusOptions={statusFilterOptions}
+					/>
+				}
 			/>
 		</div>
 	);

@@ -63,7 +63,7 @@ describe('CampaignDashboardPage', () => {
 
 		// Wait for campaigns to load - should only show campaigns with "summer" in the name
 		expect(await screen.findByText('Summer Sale 2024')).toBeInTheDocument();
-		
+
 		// Should show filtered count
 		const heading = await screen.findByRole('heading', { name: /Campaigns/ });
 		expect(heading).toBeInTheDocument();

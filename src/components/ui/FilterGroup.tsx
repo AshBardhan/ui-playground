@@ -1,44 +1,42 @@
+import { Checkbox, Field, Label } from '@headlessui/react';
+import { Check } from 'lucide-react';
 import { Button } from './Button';
 import clsx from 'clsx';
+import { Text } from './Text';
 
-interface FilterGroupProps<T extends string> {
+export interface FilterOption {
+	label: string;
+	value: string;
+}
+
+interface FilterGroupProps {
 	title: string;
-	options: T[];
-	selectedValues: T[];
-	onChange: (values: T[]) => void;
-	labels?: Record<T, string>;
+	options: FilterOption[];
+	selectedValues: string[];
+	onChange: (values: string[]) => void;
 	className?: string;
 }
 
-export const FilterGroup = <T extends string>({
-	title,
-	options,
-	selectedValues,
-	onChange,
-	labels,
-	className,
-}: FilterGroupProps<T>) => {
-	const handleToggle = (option: T) => {
-		const newValues = selectedValues.includes(option)
-			? selectedValues.filter((value) => value !== option)
-			: [...selectedValues, option];
+export const FilterGroup = ({ title, options, selectedValues, onChange, className }: FilterGroupProps) => {
+	const handleToggle = (value: string) => {
+		const newValues = selectedValues.includes(value)
+			? selectedValues.filter((v) => v !== value)
+			: [...selectedValues, value];
 		onChange(newValues);
 	};
 
 	const handleSelectAll = () => {
-		onChange(options);
+		onChange(options.map((opt) => opt.value));
 	};
 
 	const handleClearAll = () => {
 		onChange([]);
 	};
 
-	const getLabel = (option: T) => labels?.[option] || option;
-
 	return (
 		<div className={clsx('space-y-3', className)}>
 			<div className="flex items-center justify-between">
-				<h3 className="text-sm font-medium text-gray-900">{title}</h3>
+				<Text variant="h5">{title}</Text>
 				<div className="flex gap-1 items-center">
 					<Button onClick={handleSelectAll} theme="ghost" size="sm">
 						All
@@ -49,25 +47,29 @@ export const FilterGroup = <T extends string>({
 				</div>
 			</div>
 
-			<div className="space-y-2">
+			<div>
 				{options.map((option) => {
-					const isSelected = selectedValues.includes(option);
+					const isSelected = selectedValues.includes(option.value);
 					return (
-						<label
-							key={option}
+						<Field
+							key={option.value}
 							className={clsx(
-								'flex items-center space-x-2 cursor-pointer',
+								'flex items-center gap-2 cursor-pointer',
 								'p-2 rounded-md hover:bg-gray-50 transition-colors'
 							)}
 						>
-							<input
-								type="checkbox"
+							<Checkbox
 								checked={isSelected}
-								onChange={() => handleToggle(option)}
-								className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-							/>
-							<span className="text-sm text-gray-700">{getLabel(option)}</span>
-						</label>
+								onChange={() => handleToggle(option.value)}
+								className={clsx(
+									'group h-5 w-5 rounded border flex items-center justify-center transition-colors',
+									'border-gray-300 data-checked:bg-blue-600 data-checked:border-blue-600'
+								)}
+							>
+								<Check className="h-3 w-3 text-white opacity-0 group-data-checked:opacity-100" strokeWidth={3} />
+							</Checkbox>
+							<Label className="flex-1 font-medium text-sm text-gray-700 cursor-pointer">{option.label}</Label>
+						</Field>
 					);
 				})}
 			</div>

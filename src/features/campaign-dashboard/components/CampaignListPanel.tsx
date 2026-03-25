@@ -3,8 +3,10 @@ import { Campaign } from '../types/campaign';
 import { CampaignCard } from './CampaignCard';
 import { Skeleton } from '@/components/ui/Skeleton';
 import clsx from 'clsx';
+import { Card } from '@/components/ui/Card';
+import { Text } from '@/components/ui/Text';
 
-interface CampaignListProps {
+interface CampaignListPanelProps {
 	campaigns: Campaign[];
 	loading?: boolean;
 	loadingMore?: boolean;
@@ -14,7 +16,7 @@ interface CampaignListProps {
 	className?: string;
 }
 
-export const CampaignList = ({
+export const CampaignListPanel = ({
 	campaigns,
 	loading = false,
 	loadingMore = false,
@@ -22,7 +24,7 @@ export const CampaignList = ({
 	onLoadMore,
 	onCampaignClick,
 	className,
-}: CampaignListProps) => {
+}: CampaignListPanelProps) => {
 	const observerRef = useRef<IntersectionObserver | null>(null);
 	const loadMoreRef = useRef<HTMLDivElement>(null);
 
@@ -64,10 +66,10 @@ export const CampaignList = ({
 	// Empty state
 	if (campaigns.length === 0) {
 		return (
-			<div className={clsx('text-center py-12', className)}>
-				<div className="text-gray-500 text-lg mb-2">No campaigns found</div>
-				<div className="text-gray-400 text-sm">Try adjusting your search or filter criteria</div>
-			</div>
+			<Card className={clsx('h-full flex flex-col items-center justify-center gap-2', className)}>
+				<Text variant="h3">No campaigns found</Text>
+				<Text variant="p">Try adjusting your search or filter criteria</Text>
+			</Card>
 		);
 	}
 

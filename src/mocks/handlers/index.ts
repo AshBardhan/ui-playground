@@ -46,6 +46,15 @@ export const handlers = [
 		const statusFilter = url.searchParams.get('status');
 		const searchQuery = url.searchParams.get('search');
 
+		// Calculate status counts for ALL campaigns (before filtering)
+		const statusCounts = mockCampaigns.reduce(
+			(counts, campaign) => {
+				counts[campaign.status] = (counts[campaign.status] || 0) + 1;
+				return counts;
+			},
+			{} as Record<string, number>
+		);
+
 		// Start with all campaigns
 		let filteredCampaigns = [...mockCampaigns];
 
@@ -79,6 +88,7 @@ export const handlers = [
 				nextCursor,
 				hasMore,
 				total: filteredCampaigns.length,
+				statusCounts,
 			},
 		});
 	}),

@@ -1,4 +1,5 @@
-import { Campaign, CampaignStatus } from '../types/campaign';
+import { Campaign } from '../types/campaign';
+import { CAMPAIGN_STATUS_OPTIONS } from '../constants/campaign-status';
 
 // Campaign name templates
 const campaignPrefixes = [
@@ -36,11 +37,9 @@ const campaignTypes = [
 
 // Generate 100 campaigns
 const generateCampaigns = (count: number): Campaign[] => {
-	const statuses: CampaignStatus[] = ['DRAFT', 'RUNNING', 'PAUSED', 'ARCHIVED'];
-
 	return Array.from({ length: count }, (_, i) => {
 		const id = (i + 1).toString();
-		const status = statuses[i % 4];
+		const status = CAMPAIGN_STATUS_OPTIONS[i % CAMPAIGN_STATUS_OPTIONS.length];
 		const isDraft = status === 'DRAFT';
 
 		const prefix = campaignPrefixes[i % campaignPrefixes.length];
