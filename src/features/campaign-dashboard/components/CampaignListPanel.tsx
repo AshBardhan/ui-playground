@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import clsx from 'clsx';
 import { Card } from '@/components/ui/Card';
 import { Text } from '@/components/ui/Text';
+import { CampaignCardSkeleton } from './CampaignCardSkeleton';
 
 interface CampaignListPanelProps {
 	campaigns: Campaign[];
@@ -55,11 +56,13 @@ export const CampaignListPanel = ({
 	// Initial loading state
 	if (loading) {
 		return (
-			<div className={clsx('space-y-1', className)}>
-				{Array.from({ length: 4 }).map((_, index) => (
-					<Skeleton key={index} height={100} />
-				))}
-			</div>
+			<Card className={clsx('p-0!', className)}>
+				<div className="divide-y divide-gray-200">
+					{Array.from({ length: 4 }).map((_, index) => (
+						<CampaignCardSkeleton key={index} />
+					))}
+				</div>
+			</Card>
 		);
 	}
 
@@ -74,8 +77,8 @@ export const CampaignListPanel = ({
 	}
 
 	return (
-		<div className={clsx('space-y-0', className)}>
-			<div className="bg-white rounded-lg border border-gray-200 divide-y divide-gray-200">
+		<Card className={clsx('p-0!', className)}>
+			<div className="divide-y divide-gray-200">
 				{campaigns.map((campaign, index) => (
 					<CampaignCard
 						key={campaign.id}
@@ -84,25 +87,31 @@ export const CampaignListPanel = ({
 						className={index === 0 ? 'rounded-t-lg' : ''}
 					/>
 				))}
+
+				{/* Intersection observer trigger for infinite scroll */}
+				{hasMore && (
+					<div ref={loadMoreRef}>
+						{loadingMore ? (
+							<div className="divide-y divide-gray-200">
+								{Array.from({ length: 2 }).map((_, index) => (
+									<CampaignCardSkeleton key={index} />
+								))}
+							</div>
+						) : (
+							<div className="flex items-center justify-center h-20">
+								<Text className="text-sm">Scroll for more...</Text>
+							</div>
+						)}
+					</div>
+				)}
+
+				{/* End of list indicator */}
+				{!hasMore && campaigns.length > 0 && (
+					<div className="flex items-center justify-center h-20">
+						<Text className="text-sm">No more campaigns to load</Text>
+					</div>
+				)}
 			</div>
-
-			{/* Intersection observer trigger for infinite scroll */}
-			{hasMore && (
-				<div ref={loadMoreRef} className="py-4">
-					{loadingMore ? (
-						<div className="space-y-1">
-							<Skeleton height={100} />
-						</div>
-					) : (
-						<div className="text-center text-gray-500 text-sm">Scroll for more...</div>
-					)}
-				</div>
-			)}
-
-			{/* End of list indicator */}
-			{!hasMore && campaigns.length > 0 && (
-				<div className="text-center py-4 text-gray-400 text-sm">No more campaigns to load</div>
-			)}
-		</div>
+		</Card>
 	);
 };
