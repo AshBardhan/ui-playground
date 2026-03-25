@@ -12,7 +12,7 @@ interface CardProps {
 export const Card = ({ children, className, href }: CardProps) => {
 	const classes = twMerge(
 		clsx(
-			'block p-6 bg-white border border-gray-200 rounded-lg shadow transition-colors',
+			'block p-4 sm:p-6 bg-white border border-gray-200 rounded-lg shadow transition-colors',
 			href && 'hover:bg-gray-100 hover:shadow-md cursor-pointer',
 			className
 		)

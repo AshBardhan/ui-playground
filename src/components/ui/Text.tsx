@@ -2,12 +2,12 @@ import { ReactNode } from 'react';
 import clsx from 'clsx';
 
 interface TextProps {
-	variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p';
+	variant?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'p' | 'div';
 	children: ReactNode;
 	className?: string;
 }
 
-export const Text = ({ variant = 'p', children, className }: TextProps) => {
+export const Text = ({ variant = 'div', children, className }: TextProps) => {
 	const baseClasses = clsx(
 		variant === 'h1' && 'text-3xl font-bold text-gray-900',
 		variant === 'h2' && 'text-2xl font-bold tracking-tight text-gray-900',
@@ -16,6 +16,7 @@ export const Text = ({ variant = 'p', children, className }: TextProps) => {
 		variant === 'h5' && 'text-base font-semibold text-gray-900',
 		variant === 'h6' && 'text-sm font-semibold text-gray-900',
 		variant === 'p' && 'font-normal text-gray-700',
+		variant === 'div' && 'font-normal text-gray-700',
 		className
 	);
 

@@ -18,16 +18,16 @@ const variantClasses = {
 };
 
 const sizeClasses = {
-	sm: 'px-2 py-0.5 text-xs',
-	md: 'px-2.5 py-0.5 text-xs',
-	lg: 'px-3 py-1 text-sm',
+	sm: 'sm:px-2 sm:py-0.5 px-1 py-0.5 text-xs',
+	md: 'sm:px-2.5 sm:py-0.5 px-2 py-0.5 text-xs',
+	lg: 'sm:px-3 sm:py-1 px-3 py-1 text-sm',
 };
 
 export const Badge = ({ label, variant = 'neutral', size = 'md', className }: BadgeProps) => {
 	return (
 		<span
 			className={clsx(
-				'inline-flex items-center rounded-full font-medium border',
+				'inline-flex items-center text-center rounded-full font-medium border',
 				variantClasses[variant],
 				sizeClasses[size],
 				className
