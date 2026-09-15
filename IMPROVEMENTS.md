@@ -97,21 +97,13 @@ Build **after** Dynamic Filter is refined and the Advanced Data Table prototype 
 
 ## App-wide improvements
 
-### Shared primitives (Radix + page extensions)
+### Design system and component architecture
 
-- Split layers: Radix (or Headless) unstyled primitives → shared styled components with **few** variants → optional per-page wrappers (`MButton`) that add size/theme and classes
-- Pass `className` through every shared component so pages can override without forking
-- Do not add page-only themes to the shared `Button` / `Card` enums
-- Expand the shared kit only with **generic, a11y-heavy** primitives most prototypes can reuse
-  - Feedback: toast, alert, confirm dialog
-  - Inputs: date/time, file, combobox; rich text only when a prototype needs it
-  - Navigation: tabs, pagination, breadcrumbs, command palette (basic variants only)
-  - Layout primitives: sidebar, split / resizable panels (unstyled behavior; look stays per page)
-  - Loading: spinner, progress, extra skeleton shapes
-  - Empty-state slot (illustration/CTA supplied by the page)
-- Layout chrome for the playground (`AppHeader`, `PageLayout`) stays separate from prototype visual language
-- Storybook for **shared primitives only**, not every page widget
-- Accessibility pass on the shared layer (WCAG 2.1 AA): focus, keyboard, dialog traps, live regions — pages inherit this instead of reimplementing it
+- **Atomic layout:** Headless UI (via `components/ui` only) → atoms/molecules in `components/ui/` → playground shell in `components/layout/` → feature organisms, widgets, and templates in `features/*/components/`; page-specific styling in `features/*/ui/`
+- **Shared kit:** few variants, `className` passthrough, no page-only themes on shared enums; grow with generic a11y-heavy primitives only (dialog, toast, tabs, combobox, etc.) — not charts, tables, or domain widgets
+- **Accessibility:** WCAG 2.1 AA on shared components; features compose shared inputs/dialogs instead of reimplementing focus, keyboard, or ARIA
+- **Storybook:** document foundations, atoms, molecules, and layout templates — not feature widgets
+- **Feature-owned UI:** containers, dashboard widgets, filter builders, and layout shells stay per prototype; reuse data/query patterns across features, not each other’s components
 
 ### Architecture and data
 
@@ -142,9 +134,10 @@ Build **after** Dynamic Filter is refined and the Advanced Data Table prototype 
 
 ### Tooling and quality
 
+- Add Storybook (Vite + Tailwind + path aliases); `storybook` and `build-storybook` scripts
 - Lint TypeScript: ESLint currently targets `js`/`jsx` only
 - Fix entry/config nits: `index.html` → `/src/index.tsx`; Vite `defineConfig` from `vite`; Prettier script to match `.prettierrc`
-- CI: lint + test + build on PR
+- CI: lint + test + build on PR; optional `build-storybook` on PR or deploy Storybook as static docs
 - Git hooks for lint (and optionally tests) on commit
 - Bundle analysis when prototype pages start to bloat
 - Coverage provider wired for `npm run test:coverage` if that script is meant to work out of the box
@@ -155,9 +148,9 @@ Build **after** Dynamic Filter is refined and the Advanced Data Table prototype 
 - Scaffold a new prototype (CLI or script): feature folder, page, `ui/` for wrappers, MSW handlers, home/header entry
 - Shared hooks/utils that are not page-owned: `useMediaQuery`, `useLocalStorage`, date/currency helpers
 - Desktop nav links; keep the dropdown for small viewports if useful
-- Optional later: dedicated docs site if Storybook is not enough; React DevTools / state time-travel only if a prototype needs it
+- React DevTools / state time-travel only if a prototype needs it
 
 ### Testing (beyond a single page)
 
 - Playwright for a few **smoke paths** (open each prototype, one critical interaction), not a full product E2E suite
-- Shared primitive tests (Button, Dialog, Dropdown) so page wrappers can stay thin
+- Shared primitive tests (Button, Dialog, Dropdown) so feature wrappers can stay thin
